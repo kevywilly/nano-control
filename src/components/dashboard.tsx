@@ -3,7 +3,7 @@ import {api, CategoryCount} from "../api/nano-api";
 import {useQuery, useQueryClient} from "react-query";
 
 
-const DriveButton = (props: {command: string, onClick: (category: string) => void}) => {
+const DriveButton = (props: {command: string, onClick: (command: string) => void}) => {
     const {command, onClick} = props
 
     return (
