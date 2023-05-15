@@ -12,7 +12,7 @@ export interface CategoryCount {
     entries: number
 }
 
-async function drive(cmd: string, speed: number = 20) {
+async function drive(cmd: string, speed: number = 25) {
     const {data} = await axios.get(DRIVE_PATH(cmd, speed))
     return data
 }

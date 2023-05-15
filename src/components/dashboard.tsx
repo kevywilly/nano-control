@@ -32,6 +32,7 @@ const CategoryButton = (props: {category: CategoryCount, onClick: (category: Cat
 export default function Dashboard() {
 
     const [cmd, setCmd] = useState<string>("stop")
+    const [speed, setSpeed] = useState<number>(25)
 
     const queryClient = useQueryClient()
 
@@ -45,11 +46,32 @@ export default function Dashboard() {
     const handleCmdClick = (command: string) => {
         if(cmd === command) {
             setCmd("stop")
-            api.methods.drive("stop", 15)
+            api.methods.drive("stop", speed)
             return
         }
         setCmd(command)
-        api.methods.drive(command, 15)
+        drive(command, speed)
+    }
+
+    const drive = (command: string, speed: number) => {
+        api.methods.drive(command, speed)
+    }
+
+    const speedDown = () => {
+        if(speed >= 5) {
+            const s = speed-5
+            setSpeed(s)
+            drive(cmd, s)
+        }
+
+    }
+
+    const speedUp = () => {
+        if(speed <=95) {
+            const s = speed + 5
+            setSpeed(s)
+            drive(cmd, s)
+        }
     }
 
     const handleCategoryClick = (category: CategoryCount) =>
@@ -67,12 +89,18 @@ export default function Dashboard() {
                 <div className="flex flex-col items-center gap-4 w-1/2">
 
                         <h1 className="font-bold text-xl text-center mb-4">Movement</h1>
-                        <div className="grid grid-cols-3 text-center w-full gap-4">
+
+                        <div className="py-4 grid grid-cols-3 text-center w-full gap-4 items-center border rounded-lg">
+
                             <div className="col-span-3"><DriveButton command="forward" onClick={handleCmdClick}/></div>
                             <div><DriveButton command="left" onClick={handleCmdClick}/></div>
                             <div><DriveButton command="stop" onClick={handleCmdClick}/></div>
                             <div><DriveButton command="right" onClick={handleCmdClick}/></div>
                             <div className="col-span-full"><DriveButton command="backward" onClick={handleCmdClick}/></div>
+
+                            <div><button onClick={speedDown} className="rounded-md bg-red-400 p-4 w-1/2">Slower</button></div>
+                            <div className="font-extrabold text-xl">{speed}</div>
+                            <div><button onClick={speedUp} className="rounded-md bg-green-100 p-4 w-1/2">Faster</button></div>
                         </div>
                         <h1 className="font-bold text-xl text-center mb-4">Data Collection</h1>
                         <div className="grid grid-cols-4 gap-2">
