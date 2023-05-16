@@ -102,7 +102,7 @@ export default function Dashboard() {
                             <div><button onClick={speedUp} className="rounded-md bg-green-100 p-4 w-1/2">Faster</button></div>
                         </div>
                         <h1 className="font-bold text-xl text-center mb-4">Data Collection</h1>
-                        <div className="grid grid-flow-row gap-2">
+                        <div className="grid grid-cols-4 gap-2">
                             { categories && categories.map((k) => (
                                 <CategoryButton category={k} onClick={handleCategoryClick}/>
                             ))
