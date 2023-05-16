@@ -89,7 +89,6 @@ export default function Dashboard() {
                 <div className="flex flex-col items-center gap-4 w-1/2">
 
                         <h1 className="font-bold text-xl text-center mb-4">Movement</h1>
-
                         <div className="py-4 grid grid-cols-3 text-center w-full gap-4 items-center border rounded-lg">
 
                             <div className="col-span-3"><DriveButton command="forward" onClick={handleCmdClick}/></div>
@@ -103,7 +102,7 @@ export default function Dashboard() {
                             <div><button onClick={speedUp} className="rounded-md bg-green-100 p-4 w-1/2">Faster</button></div>
                         </div>
                         <h1 className="font-bold text-xl text-center mb-4">Data Collection</h1>
-                        <div className="grid grid-cols-4 gap-2">
+                        <div className="grid grid-flow-row gap-2">
                             { categories && categories.map((k) => (
                                 <CategoryButton category={k} onClick={handleCategoryClick}/>
                             ))
