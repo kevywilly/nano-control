@@ -33,7 +33,7 @@ export default function Dashboard() {
 
     const [cmd, setCmd] = useState<string>("stop")
     const [speed, setSpeed] = useState<number>(25)
-
+    const [autodrive, setAutodrive] = useState(false)
     const queryClient = useQueryClient()
 
     const {
@@ -42,6 +42,10 @@ export default function Dashboard() {
         ['categories'],
         () => api.methods.get_category_counts()
     )
+
+    const handleAutoDrive = () => {
+        api.methods.autodrive().then((v) => setAutodrive(v.autodrive))
+    }
 
     const handleCmdClick = (command: string) => {
         if(cmd === command) {
@@ -80,12 +84,18 @@ export default function Dashboard() {
     return (
         <>
             <div className="flex flex-row w-full gap-8">
+                <div className="flex flex-col w-1/2 justify-center gap-2">
                 <img
-                    className="aspect-square w-1/2 rounded-xl"
+                    className="aspect-square w-full rounded-xl"
                     src={api.routes.stream_url}
                     alt="Jetson Rover Stream"
                     content="multipart/x-mixed-replace; boundary=frame"
                 />
+                    <button onClick={handleAutoDrive}
+                            className={`rounded-md ${autodrive ? "bg-green-500" : "bg-black"} text-white p-4`}>
+                        Turn Autodrive: {autodrive ? "OFF" : "ON"}
+                    </button>
+                </div>
                 <div className="flex flex-col items-center gap-4 w-1/2">
 
                         <h1 className="font-bold text-xl text-center mb-4">Movement</h1>
