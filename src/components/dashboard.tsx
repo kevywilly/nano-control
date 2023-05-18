@@ -9,7 +9,7 @@ const DriveButton = (props: {command: string, onClick: (command: string) => void
     return (
         <button
             onClick={() => onClick(command)}
-            className="rounded-md bg-blue-400 p-4 w-1/2"
+            className="rounded-md bg-blue-400 p-2"
         >{command}
         </button>
     )
@@ -83,42 +83,36 @@ export default function Dashboard() {
 
     return (
         <>
-            <div className="flex flex-row w-full gap-8">
-                <div className="flex flex-col w-1/2 justify-center gap-2">
+            <div className="flex flex-col xl:flex-row  w-full gap-4 items-center">
+                <div className="flex flex-col w-full xl:w-1/2 justify-center items-center gap-2">
                 <img
-                    className="aspect-square w-full rounded-xl"
+                    className="aspect-square w-4/5 rounded-xl"
                     src={api.routes.stream_url}
                     alt="Jetson Rover Stream"
                     content="multipart/x-mixed-replace; boundary=frame"
                 />
+                </div>
+                <div className="grid grid-cols-4 gap-4">
                     <button onClick={handleAutoDrive}
-                            className={`rounded-md ${autodrive ? "bg-green-500" : "bg-black"} text-white p-4`}>
-                        Turn Autodrive: {autodrive ? "OFF" : "ON"}
+                            className={`rounded-md ${autodrive ? "bg-green-500" : "bg-black"} text-white p-2`}>
+                        Auto {autodrive ? "OFF" : "ON"}
                     </button>
+                    <button onClick={speedDown} className="rounded-md bg-red-400 p-2 w-full">-</button>
+                    <button className="rounded-md bg-green-100 p-2 w-full font-bold">{speed}</button>
+                    <button onClick={speedUp} className="rounded-md bg-green-400 p-2 w-full">+</button>
+                    <DriveButton command="left" onClick={handleCmdClick}/>
+                    <DriveButton command="forward" onClick={handleCmdClick}/>
+                    <DriveButton command="backward" onClick={handleCmdClick}/>
+                    <DriveButton command="right" onClick={handleCmdClick}/>
+                    <DriveButton command="stop" onClick={handleCmdClick}/>
+
+                    { categories && categories.map((k) => (
+                        <CategoryButton category={k} onClick={handleCategoryClick}/>
+                    ))
+                    }
                 </div>
-                <div className="flex flex-col items-center gap-4 w-1/2">
 
-                        <h1 className="font-bold text-xl text-center mb-4">Movement</h1>
-                        <div className="py-4 grid grid-cols-3 text-center w-full gap-4 items-center border rounded-lg">
 
-                            <div className="col-span-3"><DriveButton command="forward" onClick={handleCmdClick}/></div>
-                            <div><DriveButton command="left" onClick={handleCmdClick}/></div>
-                            <div><DriveButton command="stop" onClick={handleCmdClick}/></div>
-                            <div><DriveButton command="right" onClick={handleCmdClick}/></div>
-                            <div className="col-span-full"><DriveButton command="backward" onClick={handleCmdClick}/></div>
-
-                            <div><button onClick={speedDown} className="rounded-md bg-red-400 p-4 w-1/2">Slower</button></div>
-                            <div className="font-extrabold text-xl">{speed}</div>
-                            <div><button onClick={speedUp} className="rounded-md bg-green-100 p-4 w-1/2">Faster</button></div>
-                        </div>
-                        <h1 className="font-bold text-xl text-center mb-4">Data Collection</h1>
-                        <div className="grid grid-cols-4 gap-2">
-                            { categories && categories.map((k) => (
-                                <CategoryButton category={k} onClick={handleCategoryClick}/>
-                            ))
-                            }
-                        </div>
-                </div>
             </div>
         </>
     )
