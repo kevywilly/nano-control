@@ -10,9 +10,6 @@ function App() {
   return (
       <QueryClientProvider client={queryClient}>
         <div className="w-full p-2">
-            <h2 className="text-center text-xl font-extrabold text-indigo-600 mb-2">
-                Jetson Rover
-            </h2>
             <Dashboard/>
         </div>
       </QueryClientProvider>

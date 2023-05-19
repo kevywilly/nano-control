@@ -20,12 +20,12 @@ const CategoryButton = (props: {category: CategoryCount, onClick: (category: Cat
     const {category, onClick} = props
 
         return (
-            <div className="flex flex-col w-full gap-4 justify-center">
+            <div className="flex flex-col w-full gap-1 justify-center">
                 <button
                     onClick={() => onClick(category)}
-                    className="rounded-full bg-black w-full p-2 text-white"
-                >{category.name}</button>
-                <div className="text-center font-bold text-xl">{category.entries}</div>
+                    className="rounded-full bg-black w-full p-2 text-white text-xs"
+                >{category.name}<br/>{category.entries}</button>
+                <div className="text-center font-bold text-xl"></div>
             </div>
         )
 }
@@ -84,7 +84,7 @@ export default function Dashboard() {
     return (
         <>
             <div className="flex flex-col xl:flex-row  w-full gap-4 items-center">
-                <div className="flex flex-col w-full xl:w-1/2 justify-center items-center gap-2">
+                <div className="flex flex-col w-full lg:w-1/2 justify-center items-center gap-2">
                 <img
                     className="aspect-square w-full rounded-xl"
                     src={api.routes.stream_url}
@@ -97,13 +97,13 @@ export default function Dashboard() {
                         <DriveButton command="forward" onClick={handleCmdClick}/>
                     </div>
                     <div className="col-span-1 w-full">
-                        <button onClick={speedUp} className="rounded-full bg-green-400 p-2 w-full">+</button>
+                        <button onClick={speedUp} className="rounded-full bg-green-400 p-2 w-full font-extrabold">+</button>
                     </div>
 
                     <DriveButton command="left" onClick={handleCmdClick}/>
                     <DriveButton command="stop" onClick={handleCmdClick}/>
                     <DriveButton command="right" onClick={handleCmdClick}/>
-                    <button onClick={speedDown} className="rounded-full bg-red-400 p-2 w-full">-</button>
+                    <button onClick={speedDown} className="rounded-full bg-red-400 p-2 w-full font-extrabold">-</button>
 
                     <div className="col-span-3 w-full">
                         <DriveButton command="backward" onClick={handleCmdClick}/>
@@ -115,7 +115,7 @@ export default function Dashboard() {
                     ))
                     }
                     <button onClick={handleAutoDrive}
-                            className={`rounded-md ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"}  p-2 w-full`}>
+                            className={`rounded-full ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"}  p-2 w-full`}>
                         Auto {autodrive ? "OFF" : "ON"}
                     </button>
                 </div>
