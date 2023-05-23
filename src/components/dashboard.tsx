@@ -94,16 +94,14 @@ export default function Dashboard() {
                 />
                 </div>
                 <div className="grid grid-cols-4 gap-4">
-                    <div className="col-span-3 w-full">
-                        <DriveButton command="forward" onClick={handleCmdClick}/>
-                    </div>
-                    <div className="col-span-1 w-full">
-                        <button onClick={speedUp} className="rounded-full bg-green-400 p-2 w-full font-extrabold">+</button>
-                    </div>
-
                     <DriveButton command="left" onClick={handleCmdClick}/>
-                    <DriveButton command="stop" onClick={handleCmdClick}/>
+                    <DriveButton command="forward" onClick={handleCmdClick}/>
                     <DriveButton command="right" onClick={handleCmdClick}/>
+                    <button onClick={speedUp} className="rounded-full bg-green-400 p-2 w-full font-extrabold">+</button>
+
+                    <DriveButton command="slide_left" onClick={handleCmdClick}/>
+                    <DriveButton command="stop" onClick={handleCmdClick}/>
+                    <DriveButton command="slide_right" onClick={handleCmdClick}/>
                     <button onClick={speedDown} className="rounded-full bg-red-400 p-2 w-full font-extrabold">-</button>
 
                     <div className="col-span-3 w-full">
