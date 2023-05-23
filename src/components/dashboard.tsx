@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {api, CategoryCount} from "../api/nano-api";
 import {useQuery, useQueryClient} from "react-query";
+import {AppSettings} from "../constants";
 
 
 const DriveButton = (props: {command: string, onClick: (command: string) => void}) => {
@@ -32,7 +33,7 @@ const CategoryButton = (props: {category: CategoryCount, onClick: (category: Cat
 export default function Dashboard() {
 
     const [cmd, setCmd] = useState<string>("stop")
-    const [speed, setSpeed] = useState<number>(25)
+    const [speed, setSpeed] = useState<number>(AppSettings.defaultSpeed)
     const [autodrive, setAutodrive] = useState(false)
     const queryClient = useQueryClient()
 
