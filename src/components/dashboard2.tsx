@@ -167,7 +167,7 @@ export default function Dashboard2() {
                 />
             </div>
             <div className="absolute z-10 bottom-1/3 flex flex-row w-full justify-center gap-24">
-                <Joystick  size={80} sticky={false} baseColor="indigo" stickColor="blue" move={handleMove1} stop={handleStop} minDistance={30} />
+                <Joystick  size={140} sticky={false} baseColor="indigo" stickColor="blue" move={handleMove1} stop={handleStop} minDistance={30} />
             </div>
 
         </div>
