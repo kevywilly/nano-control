@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import {api, CategoryCount} from "../api/nano-api";
 import {useQuery, useQueryClient} from "react-query";
 import {AppSettings} from "../constants";
+import { Joystick } from 'react-joystick-component';
+import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
 
 
 const DriveButton = (props: {command: string, onClick: (command: string) => void}) => {
@@ -16,6 +18,13 @@ const DriveButton = (props: {command: string, onClick: (command: string) => void
     )
 }
 
+const handleMove = (e: IJoystickUpdateEvent) => {
+    console.log(e)
+}
+
+const handleStop = (e: IJoystickUpdateEvent) => {
+    console.log(e)
+}
 const CategoryButton = (props: {category: CategoryCount, onClick: (category: CategoryCount) => void}) => {
 
     const {category, onClick} = props
@@ -121,6 +130,7 @@ export default function Dashboard() {
 
 
             </div>
+            <Joystick size={100} sticky={false} baseColor="indigo" stickColor="blue" move={handleMove} stop={handleStop}></Joystick>
         </>
     )
 }

@@ -7768,6 +7768,11 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
+react-joystick-component@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/react-joystick-component/-/react-joystick-component-6.2.0.tgz#266afc27bb13b588565e9fa11f6d4964f888732d"
+  integrity sha512-oRdOBNV85P8GU8OaPL14ce204p17ue3qQvYR8m7XM/8zyewlEblnGOGZdYC3JySuoIdfZfE8HoX9cpR/mtotDA==
+
 react-query@^3.39.3:
   version "3.39.3"
   resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.39.3.tgz#4cea7127c6c26bdea2de5fb63e51044330b03f35"
