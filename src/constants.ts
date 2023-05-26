@@ -1,3 +1,3 @@
 export const AppSettings = {
-    defaultSpeed: 50
+    defaultSpeed: 0.50
 }

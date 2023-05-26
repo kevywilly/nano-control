@@ -10,7 +10,6 @@ const between = (v: number, a1: number, a2: number) => {
         return v >= a1 && v <= a2
     else
         return v <= a1 && v >= a2
-
 }
 const get_cmd = (a: number) => {
     if(between(a, -22.5, 22.5))
@@ -75,12 +74,13 @@ export default function Dashboard2() {
 
     const handleMove1 = (e: IJoystickUpdateEvent) => {
 
-        //const c = e.direction?.toLowerCase() || "stop"
-        const s = Math.round((e.distance || 0)/10.0)*10
+        const s = Math.round((e.distance || 0)/10.0)*10/100.0
         const c = get_cmd(calcAngle(e.x, e.y)) || "stop"
-        console.log(c)
 
-        if (s !== speed && c !== cmd) {
+
+        if (s !== speed || c !== cmd) {
+            console.log(c)
+            console.log(s)
             setCmd(c)
             setSpeed(s)
         }
