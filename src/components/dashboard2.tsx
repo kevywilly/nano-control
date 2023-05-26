@@ -122,15 +122,15 @@ export default function Dashboard2() {
     }
 
     const speedDown = () => {
-        if(speed >= 5) {
-            const s = speed-5
+        if(speed >= .05) {
+            const s = speed-.05
             setSpeed(s)
         }
     }
 
     const speedUp = () => {
-        if(speed <=95) {
-            const s = speed + 5
+        if(speed <=0.95) {
+            const s = speed + .05
             setSpeed(s)
         }
     }
