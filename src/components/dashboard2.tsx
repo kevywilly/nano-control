@@ -77,10 +77,7 @@ export default function Dashboard2() {
         const s = Math.round((e.distance || 0)/10.0)*10/100.0
         const c = get_cmd(calcAngle(e.x, e.y)) || "stop"
 
-
         if (s !== speed || c !== cmd) {
-            console.log(c)
-            console.log(s)
             setCmd(c)
             setSpeed(s)
         }
@@ -151,7 +148,7 @@ export default function Dashboard2() {
             </div>
             <div className="absolute flex flex-col z-10 left-10 gap-2">
                 <button onClick={speedUp} className="rounded-full bg-green-400 p-2 w-full font-extrabold">+</button>
-                <button className="rounded-full bg-gray-200 p-2 w-full font-bold">{speed}</button>
+                <button className="rounded-full bg-gray-200 p-2 w-full font-bold">{Math.round(speed*100)}</button>
                 <button onClick={speedDown} className="rounded-full bg-red-400 p-2 w-full font-extrabold">-</button>
                 <button onClick={handleAutoDrive}
                         className={`rounded-full ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"}  p-2 w-full`}>
