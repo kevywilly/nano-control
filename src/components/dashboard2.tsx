@@ -35,10 +35,10 @@ const CategoryButton = (props: {category: CategoryCount, onClick: (category: Cat
     const {category, onClick} = props
 
         return (
-            <div className="flex flex-col w-full gap-1 justify-center">
+            <div className="flex flex-col w-full gap-2 justify-center">
                 <button
                     onClick={() => onClick(category)}
-                    className="rounded-full bg-black w-full p-2 text-white text-xs"
+                    className="rounded-xl bg-stone-700 w-full p-2 text-white text-xs"
                 >{category.name}<br/>{category.entries}</button>
                 <div className="text-center font-bold text-xl"></div>
             </div>
@@ -137,14 +137,14 @@ export default function Dashboard2() {
         api.methods.collect_image(category.name).then(() => queryClient.invalidateQueries("categories"))
 
     return (
-        <div className="overflow-x-hidden">
-            <div className="absolute flex flex-col z-10 right-10">
+        <div className="overflow-x-hidden overflow-y-hidden">
+            <div className="absolute flex flex-col z-10 top-5 right-10">
                 { categories && categories.map((k) => (
                     <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
                 ))
                 }
             </div>
-            <div className="absolute flex flex-col z-10 left-10 gap-2">
+            <div className="absolute flex flex-col z-10 left-10 top-5 gap-2">
                 <button onClick={speedUp} className="rounded-full bg-green-400 p-2 w-full font-extrabold">+</button>
                 <button className="rounded-full bg-gray-200 p-2 w-full font-bold">{Math.round(speed*100)}</button>
                 <button onClick={speedDown} className="rounded-full bg-red-400 p-2 w-full font-extrabold">-</button>
@@ -153,7 +153,7 @@ export default function Dashboard2() {
                     Auto {autodrive ? "OFF" : "ON"}
                 </button>
             </div>
-            <div className="absolute w-full h-full top-0 z-0 flex flex-col items-center">
+            <div className="absolute w-full  top-5 z-0 flex flex-col items-center">
                 <img
                     className="aspect-square w-full max-w-3xl"
                     src={api.routes.stream_url}
@@ -162,7 +162,7 @@ export default function Dashboard2() {
                 />
             </div>
             <div className="absolute z-10 bottom-1/3 flex flex-row w-full justify-center gap-24">
-                <Joystick  size={140} sticky={false} baseColor="indigo" stickColor="blue" move={handleMove1} stop={handleStop} minDistance={30} />
+                <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
             </div>
 
         </div>
