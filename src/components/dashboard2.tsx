@@ -155,7 +155,7 @@ export default function Dashboard2() {
             </div>
             <div className="absolute w-full  top-5 z-0 flex flex-col items-center">
                 <img
-                    className="aspect-square w-full max-w-3xl"
+                    className="aspect-square w-full max-w-3xl rounded-lg"
                     src={api.routes.stream_url}
                     alt="Jetson Rover Stream"
                     content="multipart/x-mixed-replace; boundary=frame"
