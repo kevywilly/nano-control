@@ -15,19 +15,19 @@ const get_cmd = (a: number) => {
     if(between(a, -22.5, 22.5))
         return "slide_right"
     if(between(a, 22.5, 67.5))
-        return "right"
+        return "forward_right"
     if(between(a, 67.5, 112.5))
         return "forward"
     if(between(a, 112.5, 157.5))
-        return "left"
+        return "forward_left"
     if( a > 157.5 || a < (-157.5))
         return "slide_left"
     if(between(a, -112.5, -157.5))
-        return "left"
+        return "backward_left"
     if(between(a, -112.5, -67.5))
         return "backward"
     if(between(a, -67.5, -22.5))
-        return "right"
+        return "backward_right"
 
 }
 const CategoryButton = (props: {category: CategoryCount, onClick: (category: CategoryCount) => void}) => {
@@ -87,23 +87,12 @@ export default function Dashboard2() {
         const c = e.direction?.toLowerCase() || "stop"
         const s = Math.round((e.distance || 0)/10.0)*10
         if(e.direction === "LEFT" || e.direction === "RIGHT") {
-            if (s !== speed && c !== cmd) {
-                setCmd(`slide_${c}`)
+            if (s !== speed || c !== cmd) {
+                setCmd(e.direction?.toLowerCase())
                 setSpeed(s)
             }
 
         }
-    }
-
-    const handleMove = (e: IJoystickUpdateEvent) => {
-
-        let c = e.direction?.toLowerCase() || "stop"
-        const s = Math.round((e.distance || 0)/10.0)*10
-        if(s !== speed && c !== cmd) {
-            setCmd(c)
-            setSpeed(s)
-        }
-
     }
 
     const handleStop = (e: IJoystickUpdateEvent) => {
@@ -163,6 +152,7 @@ export default function Dashboard2() {
             </div>
             <div className="absolute z-10 bottom-1/3 flex flex-row w-full justify-center gap-24">
                 <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
+                <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
             </div>
 
         </div>
