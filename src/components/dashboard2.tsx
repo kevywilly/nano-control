@@ -73,7 +73,7 @@ export default function Dashboard2() {
     },[cmd,speed])
 
     const handleMove1 = (e: IJoystickUpdateEvent) => {
-        const s = Math.round((e.distance || 0)/10.0)*10/100.0
+        const s = Math.round((e.distance || 0)/10.0)*0.1
         const c = get_cmd(calcAngle(e.x, e.y)) || "stop"
 
         if (s !== speed || c !== cmd) {
@@ -85,7 +85,7 @@ export default function Dashboard2() {
     const handleMove2 = (e: IJoystickUpdateEvent) => {
 
         const c = e.direction?.toLowerCase() || "stop"
-        const s = Math.round((e.distance || 0)/10.0)*10
+        const s = Math.round((e.distance || 0)/10.0)*0.1
         if(e.direction === "LEFT" || e.direction === "RIGHT") {
             if (s !== speed || c !== cmd) {
                 setCmd(e.direction?.toLowerCase())
