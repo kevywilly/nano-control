@@ -138,16 +138,16 @@ export default function Dashboard2() {
 
     return (
         <div className="overflow-x-hidden overflow-y-hidden">
-            <div className="absolute flex flex-col z-10 top-5 right-10">
+            <div className="absolute flex flex-col z-10 top-10 right-5 gap-3">
                 { categories && categories.map((k) => (
                     <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
                 ))
                 }
             </div>
-            <div className="absolute flex flex-col z-10 left-10 top-5 gap-2">
-                <button onClick={speedUp} className="rounded-full bg-green-400 p-2 w-full font-extrabold">+</button>
-                <button className="rounded-full bg-gray-200 p-2 w-full font-bold">{Math.round(speed*100)}</button>
-                <button onClick={speedDown} className="rounded-full bg-red-400 p-2 w-full font-extrabold">-</button>
+            <div className="absolute flex flex-col z-10 left-5 top-10 gap-3">
+                <button onClick={speedUp} className="rounded-xl bg-green-400 p-2 w-full font-extrabold">+</button>
+                <button className="rounded-xl bg-gray-200 p-2 w-full font-bold">{Math.round(speed*100)}</button>
+                <button onClick={speedDown} className="rounded-xl bg-red-400 p-2 w-full font-extrabold">-</button>
                 <button onClick={handleAutoDrive}
                         className={`rounded-full ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"}  p-2 w-full`}>
                     Auto {autodrive ? "OFF" : "ON"}
