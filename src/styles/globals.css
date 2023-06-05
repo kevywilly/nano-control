@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind screens;
+
+@layer components {
+    .button {@apply rounded-xl p-2 cursor-pointer opacity-80 hover:opacity-100}
+
+    .button-xs {@apply button bg-stone-200 text-xs font-semibold }
+
+}

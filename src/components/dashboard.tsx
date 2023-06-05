@@ -38,8 +38,8 @@ const CategoryButton = (props: {category: CategoryCount, onClick: (category: Cat
             <div className="flex flex-col w-full gap-2 justify-center">
                 <button
                     onClick={() => onClick(category)}
-                    className="rounded-xl bg-stone-700 w-full p-2 text-white text-xs"
-                >{category.name}<br/>{category.entries}</button>
+                    className="button-xs bg-stone-700 w-full text-white"
+                >{category.name} ({category.entries})</button>
                 <div className="text-center font-bold text-xl"></div>
             </div>
         )
@@ -68,6 +68,12 @@ export default function Dashboard() {
         () => api.methods.get_category_counts()
     )
 
+    const {
+        data: calibration_count
+    } = useQuery<number, Error>(
+        ['calibration_count'],
+        () => api.methods.get_calibration_count()
+    )
     useEffect(() => {
         api.methods.drive(cmd, speed)
     },[cmd,speed])
@@ -99,6 +105,8 @@ export default function Dashboard() {
         setCmd("stop")
     }
 
+    const handleSaveImgs = () => api.methods.collect_calibration_images().then(() => queryClient.invalidateQueries("calibration_count"))
+
     const handleAutoDrive = () => {
         api.methods.autodrive().then((v) => {
             setAutodrive(v.autodrive)
@@ -127,38 +135,48 @@ export default function Dashboard() {
 
     return (
         <div className="overflow-x-hidden overflow-y-hidden">
-            <div className="absolute flex flex-col z-10 top-10 right-5 gap-3 mr-5">
-                { categories && categories.map((k) => (
-                    <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
-                ))
-                }
-            </div>
-            <div className="absolute flex flex-col z-10 left-5 top-10 gap-3 ml-5">
-                <button onClick={speedUp} className="rounded-xl bg-green-400 p-2 w-full font-extrabold">+</button>
-                <button className="rounded-xl bg-gray-200 p-2 w-full font-bold">{Math.round(speed*100)}</button>
-                <button onClick={speedDown} className="rounded-xl bg-red-400 p-2 w-full font-extrabold">-</button>
+            <div className="absolute flex flex-col z-10 left-5 top-16 gap-3 ml-5">
+                <button onClick={speedUp} className="button-xs bg-green-400 w-full">+</button>
+                <button className="button-xs bg-gray-200 w-full">{Math.round(speed*100)}</button>
+                <button onClick={speedDown} className="button-xs bg-red-400 w-full">-</button>
                 <button onClick={handleAutoDrive}
-                        className={`rounded-full ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"}  p-2 w-full`}>
+                        className={`button-xs ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"}  w-full`}>
                     Auto {autodrive ? "OFF" : "ON"}
                 </button>
             </div>
-            <div className="absolute w-full h-full top-0 z-0 flex flex-row justify-center">
+
+            <div className="absolute w-full h-full top-0 z-0 flex flex-col xl:flex-row items-center">
                 <img
-                    className="aspect-video w-1/2 max-w-3xl rounded-lg"
-                    src={`${api.routes.stream_url}/left`}
+                    className="aspect-video w-full xl:w-1/2 max-w-3xl rounded-lg"
+                    src={`${api.routes.stream_url}/LEFT`}
                     alt="Jetson Rover Stream Left"
                     content="multipart/x-mixed-replace; boundary=frame"
                 />
                 <img
-                    className="aspect-video w-1/2 max-w-3xl rounded-lg"
-                    src={`${api.routes.stream_url}/right`}
+                    className="aspect-video w-full xl:w-1/2 max-w-3xl rounded-lg"
+                    src={`${api.routes.stream_url}/RIGHT`}
                     alt="Jetson Rover Stream Right"
                     content="multipart/x-mixed-replace; boundary=frame"
                 />
             </div>
-            <div className="absolute z-10 bottom-24 flex flex-row w-full justify-center gap-24">
+            <div className="absolute w-full h-full top-0 z-0 flex flex-col xl:flex-row items-end mt-4">
+                <div className="aspect-video w-full xl:w-1/2 max-w-3xl rounded-lg text-white text-2xl font-bold text-right opacity-40 mr-2">LEFT</div>
+                <div className="aspect-video w-full xl:w-1/2 max-w-3xl rounded-lg text-white text-2xl font-bold text-right opacity-40 mr-2">RIGHT</div>
+            </div>
+
+            <div className="absolute z-10 bottom-24 xl:bottom-24 flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60">
                 <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
                 <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
+            </div>
+
+            <div className="absolute flex flex-row z-10 bottom-2 gap-3 w-full justify-between">
+                <div><button className="button-xs ml-8" onClick={handleSaveImgs}>Save Imgs ({calibration_count})</button> </div>
+                <div className="flex flex-row gap-2 mr-8">
+                    { categories && categories.map((k) => (
+                        <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
+                    ))
+                    }
+                </div>
             </div>
 
         </div>

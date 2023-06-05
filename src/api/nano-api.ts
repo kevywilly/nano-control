@@ -5,6 +5,7 @@ export const API_PATH = process.env.REACT_APP_API_PATH
 const AUTODRIVE_PATH = `${API_PATH}/autodrive`
 const STREAMING_PATH = `${API_PATH}/stream`
 const CATEGORIES_PATH = `${API_PATH}/categories`
+const CALIBRATION_PATH = `${API_PATH}/calibration`
 const CATEGORY_PATH = (category: string) => `${API_PATH}/categories/${category}`
 const DRIVE_PATH = (cmd: string, speed: number) => `${API_PATH}/drive/${cmd.toLowerCase()}/${speed}`
 
@@ -41,6 +42,14 @@ async function get_category_counts(): Promise<CategoryCount[]>{
     return data
 }
 
+async function get_calibration_count(): Promise<number>{
+    const {data} = await axios.get(`${CALIBRATION_PATH}/images/count`)
+    return data["count"]
+}
+
+async function collect_calibration_images() {
+    await axios.get(`${CALIBRATION_PATH}/images/collect`)
+}
 export const api = {
     routes: {
         stream_url: STREAMING_PATH,
@@ -51,7 +60,9 @@ export const api = {
         drive,
         collect_image,
         get_categories,
-        get_category_counts
+        get_category_counts,
+        collect_calibration_images,
+        get_calibration_count
     }
 }
 
