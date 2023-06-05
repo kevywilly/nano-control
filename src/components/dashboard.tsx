@@ -127,13 +127,13 @@ export default function Dashboard() {
 
     return (
         <div className="overflow-x-hidden overflow-y-hidden">
-            <div className="absolute flex flex-col z-10 top-10 right-5 gap-3">
+            <div className="absolute flex flex-col z-10 top-10 right-5 gap-3 mr-5">
                 { categories && categories.map((k) => (
                     <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
                 ))
                 }
             </div>
-            <div className="absolute flex flex-col z-10 left-5 top-10 gap-3">
+            <div className="absolute flex flex-col z-10 left-5 top-10 gap-3 ml-5">
                 <button onClick={speedUp} className="rounded-xl bg-green-400 p-2 w-full font-extrabold">+</button>
                 <button className="rounded-xl bg-gray-200 p-2 w-full font-bold">{Math.round(speed*100)}</button>
                 <button onClick={speedDown} className="rounded-xl bg-red-400 p-2 w-full font-extrabold">-</button>
@@ -144,21 +144,21 @@ export default function Dashboard() {
             </div>
             <div className="absolute w-full h-full top-0 z-0 flex flex-row justify-center">
                 <img
-                    className="aspect-square w-1/2 max-w-3xl rounded-lg"
+                    className="aspect-video w-1/2 max-w-3xl rounded-lg"
                     src={`${api.routes.stream_url}/left`}
                     alt="Jetson Rover Stream Left"
                     content="multipart/x-mixed-replace; boundary=frame"
                 />
                 <img
-                    className="aspect-square w-1/2 max-w-3xl rounded-lg"
+                    className="aspect-video w-1/2 max-w-3xl rounded-lg"
                     src={`${api.routes.stream_url}/right`}
                     alt="Jetson Rover Stream Right"
                     content="multipart/x-mixed-replace; boundary=frame"
                 />
             </div>
-            <div className="absolute z-10 bottom-1/3 flex flex-row w-full justify-center gap-24">
-                <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
-                <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
+            <div className="absolute z-10 bottom-24 flex flex-row w-full justify-center gap-48">
+                <Joystick  size={150} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
+                <Joystick  size={150} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
             </div>
 
         </div>
