@@ -142,7 +142,7 @@ export default function Dashboard() {
                     Auto {autodrive ? "OFF" : "ON"}
                 </button>
             </div>
-            <div className="absolute w-full h-full top-5 z-0 flex flex-row justify-center">
+            <div className="absolute w-full h-full top-0 z-0 flex flex-row justify-center">
                 <img
                     className="aspect-square w-1/2 max-w-3xl rounded-lg"
                     src={`${api.routes.stream_url}/left`}
