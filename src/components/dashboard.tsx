@@ -156,9 +156,9 @@ export default function Dashboard() {
                     content="multipart/x-mixed-replace; boundary=frame"
                 />
             </div>
-            <div className="absolute z-10 bottom-24 flex flex-row w-full justify-center gap-48">
-                <Joystick  size={150} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
-                <Joystick  size={150} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
+            <div className="absolute z-10 bottom-24 flex flex-row w-full justify-center gap-24">
+                <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
+                <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
             </div>
 
         </div>
