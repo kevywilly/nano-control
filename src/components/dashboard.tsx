@@ -147,13 +147,13 @@ export default function Dashboard() {
 
             <div className="absolute w-full h-full top-0 z-0 flex flex-col xl:flex-row items-center">
                 <img
-                    className="aspect-video w-full xl:w-1/2 max-w-3xl rounded-lg"
+                    className="aspect-video xl:aspect-square w-full xl:w-1/2 max-w-3xl rounded-lg"
                     src={`${api.routes.stream_url}/LEFT`}
                     alt="Jetson Rover Stream Left"
                     content="multipart/x-mixed-replace; boundary=frame"
                 />
                 <img
-                    className="aspect-video w-full xl:w-1/2 max-w-3xl rounded-lg"
+                    className="aspect-video xl:aspect-square w-full xl:w-1/2 max-w-3xl rounded-lg"
                     src={`${api.routes.stream_url}/RIGHT`}
                     alt="Jetson Rover Stream Right"
                     content="multipart/x-mixed-replace; boundary=frame"
