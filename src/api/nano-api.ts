@@ -14,6 +14,12 @@ export interface CategoryCount {
     entries: number
 }
 
+export interface CalibrationCounts {
+    right: number
+    left: number
+    stereo: number
+}
+
 export interface AutoDriveResponse {
     autodrive: boolean
 }
@@ -42,13 +48,13 @@ async function get_category_counts(): Promise<CategoryCount[]>{
     return data
 }
 
-async function get_calibration_count(): Promise<number>{
+async function get_calibration_counts(): Promise<CalibrationCounts>{
     const {data} = await axios.get(`${CALIBRATION_PATH}/images/count`)
-    return data["count"]
+    return data
 }
 
-async function collect_calibration_images() {
-    await axios.get(`${CALIBRATION_PATH}/images/collect`)
+async function collect_calibration_images(img: string) {
+    await axios.get(`${CALIBRATION_PATH}/images/collect/${img}`)
 }
 export const api = {
     routes: {
@@ -62,7 +68,7 @@ export const api = {
         get_categories,
         get_category_counts,
         collect_calibration_images,
-        get_calibration_count
+        get_calibration_counts
     }
 }
 

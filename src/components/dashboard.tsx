@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {api, CategoryCount} from "../api/nano-api";
+import {api, CalibrationCounts, CategoryCount} from "../api/nano-api";
 import {useQuery, useQueryClient} from "react-query";
 import {AppSettings} from "../constants";
 import { Joystick } from 'react-joystick-component';
@@ -69,10 +69,10 @@ export default function Dashboard() {
     )
 
     const {
-        data: calibration_count
-    } = useQuery<number, Error>(
-        ['calibration_count'],
-        () => api.methods.get_calibration_count()
+        data: calibration_counts
+    } = useQuery<CalibrationCounts, Error>(
+        ['calibration_counts'],
+        () => api.methods.get_calibration_counts()
     )
     useEffect(() => {
         api.methods.drive(cmd, speed)
@@ -105,7 +105,7 @@ export default function Dashboard() {
         setCmd("stop")
     }
 
-    const handleSaveImgs = () => api.methods.collect_calibration_images().then(() => queryClient.invalidateQueries("calibration_count"))
+    const handleSaveImgs = (img: string) => api.methods.collect_calibration_images(img).then(() => queryClient.invalidateQueries("calibration_counts"))
 
     const handleAutoDrive = () => {
         api.methods.autodrive().then((v) => {
@@ -170,7 +170,11 @@ export default function Dashboard() {
             </div>
 
             <div className="absolute flex flex-row z-10 bottom-2 gap-3 w-full justify-between">
-                <div><button className="button-xs ml-8" onClick={handleSaveImgs}>Save Imgs ({calibration_count})</button> </div>
+                <div className="flex flex-row gap-2">
+                    <div><button className="button-xs ml-8" onClick={() => handleSaveImgs("right")}>SV Rgt ({calibration_counts?.right})</button> </div>
+                    <div><button className="button-xs ml-8" onClick={() => handleSaveImgs("left")}>SV Lft ({calibration_counts?.left})</button> </div>
+                    <div><button className="button-xs ml-8" onClick={() => handleSaveImgs("stereo")}>SV Stereo ({calibration_counts?.stereo})</button> </div>
+                </div>
                 <div className="flex flex-row gap-2 mr-8">
                     { categories && categories.map((k) => (
                         <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
