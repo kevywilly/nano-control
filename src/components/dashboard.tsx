@@ -39,7 +39,7 @@ const CategoryButton = (props: {category: CategoryCount, onClick: (category: Cat
                 <button
                     onClick={() => onClick(category)}
                     className="button-xs bg-stone-700 w-full text-white"
-                >{category.name} ({category.entries})</button>
+                >{category.name}<br/>({category.entries})</button>
                 <div className="text-center font-bold text-xl"></div>
             </div>
         )
@@ -145,23 +145,27 @@ export default function Dashboard() {
                 </button>
             </div>
 
-            <div className="absolute w-full h-full top-0 z-0 flex flex-col xl:flex-row items-center">
-                <img
-                    className="aspect-video xl:aspect-square w-full xl:w-1/2 max-w-3xl rounded-lg"
-                    src={`${api.routes.stream_url}/LEFT`}
-                    alt="Jetson Rover Stream Left"
-                    content="multipart/x-mixed-replace; boundary=frame"
-                />
-                <img
-                    className="aspect-video xl:aspect-square w-full xl:w-1/2 max-w-3xl rounded-lg"
-                    src={`${api.routes.stream_url}/RIGHT`}
-                    alt="Jetson Rover Stream Right"
-                    content="multipart/x-mixed-replace; boundary=frame"
-                />
-            </div>
-            <div className="absolute w-full h-full top-0 z-0 flex flex-col xl:flex-row items-end mt-4">
-                <div className="aspect-video w-full xl:w-1/2 max-w-3xl rounded-lg text-white text-2xl font-bold text-right opacity-40 mr-2">LEFT</div>
-                <div className="aspect-video w-full xl:w-1/2 max-w-3xl rounded-lg text-white text-2xl font-bold text-right opacity-40 mr-2">RIGHT</div>
+            <div className="absolute top-16 z-0  flex flex-col gap-y-8 items-center w-full">
+                <div className="flex flex-col">
+                    <div className="opacity-80 mr-2 text-white font-bold text-4xl text-center">Left</div>
+                    <img
+                        className="-mt-12 aspect-video w-960 rounded-md border-4 border-stone-400 border-opacity-50"
+                        src={`${api.routes.stream_url}/LEFT`}
+                        alt="Jetson Rover Stream Left"
+                        content="multipart/x-mixed-replace; boundary=frame"
+                    />
+
+                </div>
+                <div className="flex flex-col">
+                    <div className="opacity-80 mr-2 text-white font-bold text-4xl text-center">Right</div>
+                    <img
+                        className="-mt-12 aspect-video rounded-md border-4 border-white border-opacity-50"
+                        src={`${api.routes.stream_url}/RIGHT`}
+                        alt="Jetson Rover Stream Right"
+                        content="multipart/x-mixed-replace; boundary=frame"
+                    />
+
+                </div>
             </div>
 
             <div className="absolute z-10 bottom-24 xl:bottom-24 flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60">
@@ -169,11 +173,11 @@ export default function Dashboard() {
                 <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
             </div>
 
-            <div className="absolute flex flex-row z-10 bottom-2 gap-3 w-full justify-between">
+            <div className="absolute flex flex-row z-10 bottom-4 gap-3 w-full justify-between">
                 <div className="flex flex-row gap-2">
-                    <div><button className="button-xs ml-8" onClick={() => handleSaveImgs("right")}>SV Rgt ({calibration_counts?.right})</button> </div>
-                    <div><button className="button-xs ml-8" onClick={() => handleSaveImgs("left")}>SV Lft ({calibration_counts?.left})</button> </div>
-                    <div><button className="button-xs ml-8" onClick={() => handleSaveImgs("stereo")}>SV Stereo ({calibration_counts?.stereo})</button> </div>
+                    <div><button className="button-xs ml-8 w-full" onClick={() => handleSaveImgs("right")}>Cal. R <br/>({calibration_counts?.right})</button> </div>
+                    <div><button className="button-xs ml-8 w-full" onClick={() => handleSaveImgs("left")}>Cal. L <br/> ({calibration_counts?.left})</button> </div>
+                    <div><button className="button-xs ml-8 w-full" onClick={() => handleSaveImgs("stereo")}>Cal. Stereo <br/> ({calibration_counts?.stereo})</button> </div>
                 </div>
                 <div className="flex flex-row gap-2 mr-8">
                     { categories && categories.map((k) => (
