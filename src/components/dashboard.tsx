@@ -134,58 +134,34 @@ export default function Dashboard() {
         api.methods.collect_image(category.name).then(() => queryClient.invalidateQueries("categories"))
 
     return (
-        <div className="overflow-x-hidden overflow-y-hidden">
-            <div className="absolute flex flex-col z-10 left-5 top-16 gap-3 ml-5">
+        <div className="flex flex-col items-center justify-center p-8">
+            <div className="flex flex-row gap-3 w-full max-w-2xl justify-between">
                 <button onClick={speedUp} className="button-xs bg-green-400 w-full">+</button>
                 <button className="button-xs bg-gray-200 w-full">{Math.round(speed*100)}</button>
                 <button onClick={speedDown} className="button-xs bg-red-400 w-full">-</button>
                 <button onClick={handleAutoDrive}
-                        className={`button-xs ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"}  w-full`}>
+                        className={`button-xs ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"} w-full`}>
                     Auto {autodrive ? "OFF" : "ON"}
                 </button>
             </div>
-
-            <div className="absolute top-16 z-0  flex flex-col gap-y-8 items-center w-full">
-                <div className="flex flex-col">
-                    <div className="opacity-80 mr-2 text-white font-bold text-4xl text-center">Left</div>
-                    <img
-                        className="-mt-12 aspect-video w-960 rounded-md border-4 border-stone-400 border-opacity-50"
-                        src={`${api.routes.stream_url}/LEFT`}
-                        alt="Jetson Rover Stream Left"
-                        content="multipart/x-mixed-replace; boundary=frame"
-                    />
-
-                </div>
-                <div className="flex flex-col">
-                    <div className="opacity-80 mr-2 text-white font-bold text-4xl text-center">Right</div>
-                    <img
-                        className="-mt-12 aspect-video rounded-md border-4 border-white border-opacity-50"
-                        src={`${api.routes.stream_url}/RIGHT`}
-                        alt="Jetson Rover Stream Right"
-                        content="multipart/x-mixed-replace; boundary=frame"
-                    />
-
-                </div>
+            <img
+                className="-mt-12 aspect-video w-full max-w-3xl rounded-md border-4 border-stone-400 border-opacity-50"
+                src={`${api.routes.stream_url}/3D`}
+                alt="Jetson Rover Stream Left"
+                content="multipart/x-mixed-replace; boundary=frame"
+            />
+            <div className="flex flex-row gap-2 justify-between w-full max-w-2xl -mt-16">
+                { categories && categories.map((k) => (
+                    <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
+                ))
+                }
             </div>
-
-            <div className="absolute z-10 bottom-24 xl:bottom-24 flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60">
+            <div className="flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60 mt-16">
                 <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
                 <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
             </div>
 
-            <div className="absolute flex flex-row z-10 bottom-4 gap-3 w-full justify-between">
-                <div className="flex flex-row gap-2">
-                    <div><button className="button-xs ml-8 w-full" onClick={() => handleSaveImgs("right")}>Cal. R <br/>({calibration_counts?.right})</button> </div>
-                    <div><button className="button-xs ml-8 w-full" onClick={() => handleSaveImgs("left")}>Cal. L <br/> ({calibration_counts?.left})</button> </div>
-                    <div><button className="button-xs ml-8 w-full" onClick={() => handleSaveImgs("stereo")}>Cal. Stereo <br/> ({calibration_counts?.stereo})</button> </div>
-                </div>
-                <div className="flex flex-row gap-2 mr-8">
-                    { categories && categories.map((k) => (
-                        <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
-                    ))
-                    }
-                </div>
-            </div>
+
 
         </div>
     )
