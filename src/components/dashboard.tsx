@@ -55,11 +55,14 @@ const calcAngle = (x: number | null, y: number | null) => {
     return a
 }
 
+const modes = [VideoMode.mode3d, VideoMode.modeMapped, VideoMode.modeRaw]
+
 export default function Dashboard() {
 
     const [cmd, setCmd] = useState<string>("stop")
     const [speed, setSpeed] = useState<number>(AppSettings.defaultSpeed)
     const [autodrive, setAutodrive] = useState(false)
+    const [videoMode, setVideoMode] = useState(0)
     const queryClient = useQueryClient()
 
     const {
@@ -82,6 +85,8 @@ export default function Dashboard() {
             setSpeed(s)
         }
     }
+
+    const changeMode = () => setVideoMode(videoMode < 2 ? videoMode + 1 : 0)
 
     const handleMove2 = (e: IJoystickUpdateEvent) => {
 
@@ -137,13 +142,14 @@ export default function Dashboard() {
                     Auto {autodrive ? "OFF" : "ON"}
                 </button>
             </div>
-            <VideoStream mode={VideoMode.mode3d}/>
+            <VideoStream mode={modes[videoMode]}/>
             <div className="flex flex-row gap-2 justify-between w-full max-w-2xl -mt-16">
                 { categories && categories.map((k) => (
                     <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
                 ))
                 }
             </div>
+            <button className="button bg-white mt-2 w-fit" onClick={changeMode}>{modes[videoMode]}</button>
             <div className="flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60 mt-16">
                 <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
                 <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
