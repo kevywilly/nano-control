@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {api, CalibrationCounts, CategoryCount} from "../api/nano-api";
+import {api, CategoryCount} from "../api/nano-api";
 import {useQuery, useQueryClient} from "react-query";
 import {AppSettings} from "../constants";
-import { Joystick } from 'react-joystick-component';
+import {Joystick} from 'react-joystick-component';
 import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
+import VideoStream, {VideoMode} from "./video";
 
 const between = (v: number, a1: number, a2: number) => {
     if(a1 < a2)
@@ -68,12 +69,6 @@ export default function Dashboard() {
         () => api.methods.get_category_counts()
     )
 
-    const {
-        data: calibration_counts
-    } = useQuery<CalibrationCounts, Error>(
-        ['calibration_counts'],
-        () => api.methods.get_calibration_counts()
-    )
     useEffect(() => {
         api.methods.drive(cmd, speed)
     },[cmd,speed])
@@ -104,8 +99,6 @@ export default function Dashboard() {
     const handleStop = (e: IJoystickUpdateEvent) => {
         setCmd("stop")
     }
-
-    const handleSaveImgs = (img: string) => api.methods.collect_calibration_images(img).then(() => queryClient.invalidateQueries("calibration_counts"))
 
     const handleAutoDrive = () => {
         api.methods.autodrive().then((v) => {
@@ -144,12 +137,7 @@ export default function Dashboard() {
                     Auto {autodrive ? "OFF" : "ON"}
                 </button>
             </div>
-            <img
-                className="-mt-12 aspect-video w-full max-w-3xl rounded-md border-4 border-stone-400 border-opacity-50"
-                src={`${api.routes.stream_url}/3D`}
-                alt="Jetson Rover Stream Left"
-                content="multipart/x-mixed-replace; boundary=frame"
-            />
+            <VideoStream mode={VideoMode.mode3d}/>
             <div className="flex flex-row gap-2 justify-between w-full max-w-2xl -mt-16">
                 { categories && categories.map((k) => (
                     <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>

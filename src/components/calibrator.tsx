@@ -1,44 +1,6 @@
-import React, {useEffect, useState} from "react";
-import {api, CalibrationCounts, CategoryCount} from "../api/nano-api";
+import React from "react";
+import {api, CalibrationCounts} from "../api/nano-api";
 import {useQuery, useQueryClient} from "react-query";
-import {AppSettings} from "../constants";
-import { Joystick } from 'react-joystick-component';
-import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
-
-const between = (v: number, a1: number, a2: number) => {
-    if(a1 < a2)
-        return v >= a1 && v <= a2
-    else
-        return v <= a1 && v >= a2
-}
-const get_cmd = (a: number) => {
-    if(between(a, -22.5, 22.5))
-        return "slide_right"
-    if(between(a, 22.5, 67.5))
-        return "forward_right"
-    if(between(a, 67.5, 112.5))
-        return "forward"
-    if(between(a, 112.5, 157.5))
-        return "forward_left"
-    if( a > 157.5 || a < (-157.5))
-        return "slide_left"
-    if(between(a, -112.5, -157.5))
-        return "backward_left"
-    if(between(a, -112.5, -67.5))
-        return "backward"
-    if(between(a, -67.5, -22.5))
-        return "backward_right"
-
-}
-
-const calcAngle = (x: number | null, y: number | null) => {
-    x = x || 0
-    y = y || 0
-    let a = Math.acos(x / Math.sqrt((x * x) + (y * y))) * 57.2958
-    a = y < 0 ? -a : a
-    console.log(a)
-    return a
-}
 
 export default function Calibrator() {
 
