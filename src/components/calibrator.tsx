@@ -10,10 +10,10 @@ export default function Calibrator() {
         data: calibration_counts
     } = useQuery<CalibrationCounts, Error>(
         ['calibration_counts'],
-        () => api.methods.get_calibration_counts()
+        () => api.methods.getCalibrationCounts()
     )
 
-    const handleSaveImgs = (img: string) => api.methods.collect_calibration_images(img).then(() => queryClient.invalidateQueries("calibration_counts"))
+    const handleSaveImgs = () => api.methods.collectCalibrationImages().then(() => queryClient.invalidateQueries("calibration_counts"))
 
     const stream = (camera: string) => (
         <img
@@ -31,7 +31,7 @@ export default function Calibrator() {
                 {stream("LEFT")}
                 {stream("RIGHT")}
             </div>
-            <button className="button-xs ml-8 w-full max-w-lg" onClick={() => handleSaveImgs("stereo")}>
+            <button className="button-xs ml-8 w-full max-w-lg" onClick={handleSaveImgs}>
                 Capture ({calibration_counts?.stereo})
             </button>
         </div>

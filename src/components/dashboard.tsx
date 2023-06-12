@@ -69,7 +69,7 @@ export default function Dashboard() {
         data: categories
     } = useQuery<CategoryCount[], Error>(
         ['categories'],
-        () => api.methods.get_category_counts()
+        () => api.methods.getCategoryCounts()
     )
 
     useEffect(() => {
@@ -132,31 +132,32 @@ export default function Dashboard() {
         api.methods.collect_image(category.name).then(() => queryClient.invalidateQueries("categories"))
 
     return (
-        <div className="flex flex-col items-center justify-center p-8">
-            <div className="flex flex-row gap-3 w-full max-w-2xl justify-between">
-                <button onClick={speedUp} className="button-xs bg-green-400 w-full">+</button>
-                <button className="button-xs bg-gray-200 w-full">{Math.round(speed*100)}</button>
-                <button onClick={speedDown} className="button-xs bg-red-400 w-full">-</button>
-                <button onClick={handleAutoDrive}
-                        className={`button-xs ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"} w-full`}>
-                    Auto {autodrive ? "OFF" : "ON"}
-                </button>
+        <div className = "flex flex-col w-full items-center">
+            <div className="flex flex-row items-center justify-center p-4">
+                <div className="flex flex-col gap-3 justify-between">
+                    <button onClick={speedUp} className="button-xs bg-green-400 w-full">+</button>
+                    <button className="button-xs bg-gray-200 w-full">{Math.round(speed*100)}</button>
+                    <button onClick={speedDown} className="button-xs bg-red-400 w-full">-</button>
+                    <button onClick={handleAutoDrive}
+                            className={`button-xs ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"} w-full`}>
+                        Auto {autodrive ? "OFF" : "ON"}
+                    </button>
+                </div>
+                <VideoStream mode={modes[videoMode]}/>
+                <div className="flex flex-col gap-2 justify-between">
+                    { categories && categories.map((k) => (
+                        <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
+                    ))
+                    }
+                </div>
             </div>
-            <VideoStream mode={modes[videoMode]}/>
-            <div className="flex flex-row gap-2 justify-between w-full max-w-2xl -mt-16">
-                { categories && categories.map((k) => (
-                    <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
-                ))
-                }
+            <div className="w-full -mt-16 flex flex-row justify-center">
+                <button className="button bg-blue-400 text-right w-fit " onClick={changeMode}>{modes[videoMode]}</button>
             </div>
-            <button className="button bg-white mt-2 w-fit" onClick={changeMode}>{modes[videoMode]}</button>
-            <div className="flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60 mt-16">
-                <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
-                <Joystick  size={140} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
+            <div className="flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60">
+                <Joystick  size={120} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
+                <Joystick  size={120} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
             </div>
-
-
-
         </div>
     )
 }

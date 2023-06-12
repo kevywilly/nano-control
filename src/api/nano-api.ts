@@ -9,6 +9,9 @@ const CALIBRATION_PATH = `${API_PATH}/calibration`
 const CATEGORY_PATH = (category: string) => `${API_PATH}/categories/${category}`
 const DRIVE_PATH = (cmd: string, speed: number) => `${API_PATH}/drive/${cmd.toLowerCase()}/${speed}`
 
+export interface ImagesRespose {
+    images: string[]
+}
 export interface CategoryCount {
     name: string,
     entries: number
@@ -38,37 +41,49 @@ async function autodrive(): Promise<AutoDriveResponse>{
     return data
 }
 
-async function get_categories(): Promise<string[]>{
+async function getCategories(): Promise<string[]>{
     const {data} = await axios.get(CATEGORIES_PATH)
     return data
 }
 
-async function get_category_counts(): Promise<CategoryCount[]>{
+async function getCategoryCounts(): Promise<CategoryCount[]>{
     const {data} = await axios.get(`${CATEGORIES_PATH}/counts`)
     return data
 }
 
-async function get_calibration_counts(): Promise<CalibrationCounts>{
+async function getCalibrationCounts(): Promise<CalibrationCounts>{
     const {data} = await axios.get(`${CALIBRATION_PATH}/images/count`)
     return data
 }
 
-async function collect_calibration_images(img: string) {
-    await axios.get(`${CALIBRATION_PATH}/images/collect/${img}`)
+async function collectCalibrationImages() {
+    await axios.get(`${CALIBRATION_PATH}/images/collect`)
 }
+
+async function getTrainingImages(category: string): Promise<ImagesRespose>{
+    const {data} = await axios.get(`${CATEGORIES_PATH}/${category}/images`)
+    return data
+}
+
+async function deleteTrainingImage(category: string, filename: string) {
+    await axios.delete(`${CATEGORIES_PATH}/${category}/images/${filename}`)
+}
+
 export const api = {
     routes: {
         stream_url: STREAMING_PATH,
-
+        images_url: (category: string, name: string) => `${CATEGORIES_PATH}/${category}/images/${name}`
     },
     methods: {
         autodrive,
         drive,
         collect_image,
-        get_categories,
-        get_category_counts,
-        collect_calibration_images,
-        get_calibration_counts
+        getCategories,
+        getCategoryCounts,
+        collectCalibrationImages,
+        getCalibrationCounts,
+        getTrainingImages,
+        deleteTrainingImage
     }
 }
 
