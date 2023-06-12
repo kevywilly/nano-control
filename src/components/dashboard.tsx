@@ -40,7 +40,7 @@ const CategoryButton = (props: {category: CategoryCount, onClick: (category: Cat
                 <button
                     onClick={() => onClick(category)}
                     className="button-xs bg-stone-700 w-full text-white"
-                >{category.name}<br/>({category.entries})</button>
+                >{category.name}<br/>({category.count})</button>
                 <div className="text-center font-bold text-xl"></div>
             </div>
         )
@@ -132,8 +132,11 @@ export default function Dashboard() {
         api.methods.collect_image(category.name).then(() => queryClient.invalidateQueries("categories"))
 
     return (
-        <div className = "flex flex-col w-full items-center">
-            <div className="flex flex-row items-center justify-center p-4">
+        <div className = "flex flex-col w-full items-center mt-8">
+            <div className="w-full flex flex-row justify-center z-10">
+                <button className="button bg-blue-500 w-1/4 opacity-50" onClick={changeMode}>{modes[videoMode]}</button>
+            </div>
+            <div className="flex flex-row items-center justify-center p-4 w-3/4 gap-2 -mt-16">
                 <div className="flex flex-col gap-3 justify-between">
                     <button onClick={speedUp} className="button-xs bg-green-400 w-full">+</button>
                     <button className="button-xs bg-gray-200 w-full">{Math.round(speed*100)}</button>
@@ -143,7 +146,9 @@ export default function Dashboard() {
                         Auto {autodrive ? "OFF" : "ON"}
                     </button>
                 </div>
-                <VideoStream mode={modes[videoMode]}/>
+                <div className={`${videoMode > 0 ? 'w-full lg:w-5/12' : 'w-full'}`}>
+                    <VideoStream mode={modes[videoMode]} />
+                </div>
                 <div className="flex flex-col gap-2 justify-between">
                     { categories && categories.map((k) => (
                         <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
@@ -151,12 +156,9 @@ export default function Dashboard() {
                     }
                 </div>
             </div>
-            <div className="w-full -mt-16 flex flex-row justify-center">
-                <button className="button bg-blue-400 text-right w-fit " onClick={changeMode}>{modes[videoMode]}</button>
-            </div>
             <div className="flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60">
-                <Joystick  size={120} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
-                <Joystick  size={120} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
+                <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
+                <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
             </div>
         </div>
     )

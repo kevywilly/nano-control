@@ -14,7 +14,7 @@ export default function VideoStream(props: {mode: VideoMode}) {
             return <img
                 className="aspect-video w-full rounded-md border-4 border-stone-400 border-opacity-50"
                 src={`${api.routes.stream_url}/3D`}
-                alt="Jetson Rover Stream Left"
+                alt="Jetson Rover Stream 3d"
                 content="multipart/x-mixed-replace; boundary=frame"
             />
         } else {
@@ -23,11 +23,13 @@ export default function VideoStream(props: {mode: VideoMode}) {
                     src={`${api.routes.stream_url}/${props.mode === VideoMode.modeMapped ? 'mleft' : 'left'}`}
                 alt="Jetson Rover Stream Left"
                 content="multipart/x-mixed-replace; boundary=frame"
+
                 />
                 <img className="aspect-video rounded-md border-4 border-stone-400 border-opacity-50"
                      src={`${api.routes.stream_url}/${props.mode === VideoMode.modeMapped ? 'mright' : 'right'}`}
-                     alt="Jetson Rover Stream Left"
+                     alt="Jetson Rover Stream Right"
                      content="multipart/x-mixed-replace; boundary=frame"
+
                 />
             </div>
         }

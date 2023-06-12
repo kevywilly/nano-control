@@ -9,18 +9,16 @@ const CALIBRATION_PATH = `${API_PATH}/calibration`
 const CATEGORY_PATH = (category: string) => `${API_PATH}/categories/${category}`
 const DRIVE_PATH = (cmd: string, speed: number) => `${API_PATH}/drive/${cmd.toLowerCase()}/${speed}`
 
-export interface ImagesRespose {
+export interface ImagesResponse {
     images: string[]
 }
 export interface CategoryCount {
     name: string,
-    entries: number
+    count?: number
 }
 
 export interface CalibrationCounts {
-    right: number
-    left: number
-    stereo: number
+    count?: number
 }
 
 export interface AutoDriveResponse {
@@ -60,7 +58,7 @@ async function collectCalibrationImages() {
     await axios.get(`${CALIBRATION_PATH}/images/collect`)
 }
 
-async function getTrainingImages(category: string): Promise<ImagesRespose>{
+async function getTrainingImages(category: string): Promise<ImagesResponse>{
     const {data} = await axios.get(`${CATEGORIES_PATH}/${category}/images`)
     return data
 }
@@ -69,10 +67,40 @@ async function deleteTrainingImage(category: string, filename: string) {
     await axios.delete(`${CATEGORIES_PATH}/${category}/images/${filename}`)
 }
 
+async function getCalibrationImages(): Promise<ImagesResponse>{
+    const {data} = await axios.get(`${CALIBRATION_PATH}/images`)
+    return data
+}
+
+async function deleteCalibrationImage(filename: string) {
+    await axios.delete(`${CALIBRATION_PATH}/images/${filename}`)
+}
+
+async function deleteAllCalibrationImages() {
+    await axios.delete(`${CALIBRATION_PATH}/images`)
+}
+
+async function calibrate() {
+    await axios.get(`${CALIBRATION_PATH}/calibrate`)
+}
+
+/*
+
+
+@app.get('/api/calibration/images/<name>')
+def delete_calibration_image(name):
+    bytes_str = app.calibrator.load_image(name)
+    response = flask.make_response(bytes_str)
+    response.headers.set('Content-Type', 'image/png')
+    return response
+
+@app.get('/api/calibration/calibrate')
+ */
 export const api = {
     routes: {
         stream_url: STREAMING_PATH,
-        images_url: (category: string, name: string) => `${CATEGORIES_PATH}/${category}/images/${name}`
+        training_image_url: (category: string, name: string) => `${CATEGORIES_PATH}/${category}/images/${name}`,
+        calibration_image_url: (camera: string, name: string) => `${CALIBRATION_PATH}/${camera}/images/${name}`
     },
     methods: {
         autodrive,
@@ -83,7 +111,11 @@ export const api = {
         collectCalibrationImages,
         getCalibrationCounts,
         getTrainingImages,
-        deleteTrainingImage
+        deleteTrainingImage,
+        getCalibrationImages,
+        deleteAllCalibrationImages,
+        deleteCalibrationImage,
+        calibrate
     }
 }
 

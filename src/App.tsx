@@ -5,8 +5,10 @@ import {QueryClient, QueryClientProvider} from "react-query";
 import {BrowserRouter as Router, Route, Routes,} from "react-router-dom";
 import Calibrator from "./components/calibrator";
 import Training from "./components/training";
+import NavBar from "./components/navbar";
 
 const queryClient = new QueryClient()
+
 
 
 function App() {
@@ -14,9 +16,11 @@ function App() {
       <QueryClientProvider client={queryClient}>
           <Router>
               <Routes>
-                  <Route path="/" element={<Dashboard/>}/>
-                  <Route path="/calibration" element={<Calibrator/>}/>
-                  <Route path="/training" element={<Training/>}/>
+                  <Route path="/" element={<NavBar/>}>
+                      <Route path="/" element={<Dashboard/>}/>
+                      <Route path="/calibration" element={<Calibrator/>}/>
+                      <Route path="/training" element={<Training/>}/>
+                  </Route>
               </Routes>
           </Router>
 

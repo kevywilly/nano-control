@@ -8,4 +8,16 @@
 
     .button-xs {@apply button bg-stone-200 text-xs font-semibold }
 
+    .navbar {
+        @apply flex flex-row items-center gap-4 w-full bg-stone-50 text-base text-purple-900 font-normal h-10 px-4 uppercase
+    }
+
+    .navbar-item {
+        @apply font-semibold
+    }
+
+    .navbar-item-selected {
+        @apply font-bold underline
+    }
+
 }

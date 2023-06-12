@@ -1,5 +1,5 @@
 import {useQuery} from "react-query";
-import {api, CategoryCount, ImagesRespose} from "../api/nano-api";
+import {api, CategoryCount, ImagesResponse} from "../api/nano-api";
 import React, {useEffect, useState} from "react";
 
 
@@ -24,7 +24,7 @@ export default function Training() {
 
     useEffect(() => {
         if(category){
-            api.methods.getTrainingImages(category.name).then((r: ImagesRespose) => {
+            api.methods.getTrainingImages(category.name).then((r: ImagesResponse) => {
                 setImages(r.images)
                 setReloadImages(false)
                 if(r.images && r.images.length > 0) {
@@ -49,12 +49,12 @@ export default function Training() {
                         key={cat.name}
                         onClick={() => setCategory(cat)}
                     >
-                        {cat.name} ({cat.entries})
+                        {cat.name} ({cat.count})
                     </button>
                 ))
                 }
             </div>
-            <div className={"flex flex-col gap-2 max-h-screen overflow-y-scroll border-2 rounded-lg p-2 bg-blue-400"}>
+            <div className={"flex flex-col gap-2 max-h-3/4 overflow-y-scroll border-2 rounded-lg p-2 bg-blue-400"}>
                 { images && images.map((img) => (
                     <button
                         className={`p-1 pl-4 w-full rounded-lg  text-left  ${img === image ? 'bg-blue-800' : ''}`}
@@ -67,8 +67,10 @@ export default function Training() {
             </div>
             {image && category &&
             <div className="border-2 rounded-lg p-2 bg-blue-400 flex flex-col gap-2">
-                <img src={api.routes.images_url(category.name,image)} alt="Training"/>
-                <button className = "text-base font-semibold" onClick={() => handleDelete(category.name, image)}>Delete</button>
+                <img src={api.routes.training_image_url(category.name,image)} alt="Training"/>
+                <button className = "text-base font-semibold" onClick={() => handleDelete(category.name, image)}>
+                    Delete
+                </button>
             </div>
             }
         </div>
