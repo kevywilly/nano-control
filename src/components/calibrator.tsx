@@ -21,6 +21,10 @@ export default function Calibrator() {
         () => api.methods.getCalibrationImages()
     )
 
+    const handleCalibrate = () => api.methods.calibrate().then(() => {
+        alert("Calibratioon Successful")
+    })
+
     const handleSaveImgs = () => api.methods.collectCalibrationImages().then(() => {
         queryClient.invalidateQueries("calibration_counts")
         queryClient.invalidateQueries("images")
@@ -64,9 +68,14 @@ export default function Calibrator() {
                 {stream("LEFT")}
                 {stream("RIGHT")}
             </div>
+            <div className="flex flex-row w-full justify-between gap-10">
             <button className="button-xs ml-8 w-full max-w-lg bg-blue-800 text-white font-semibold" onClick={handleSaveImgs}>
                 Capture ({calibration_counts?.count})
             </button>
+                <button className="button-xs ml-8 w-full max-w-lg bg-blue-800 text-white font-semibold" onClick={handleCalibrate}>
+                    Calibrate
+                </button>
+            </div>
 
             {images && images.images.length > 0 &&
                 <div className={"flex flex-row gap-2  rounded-lg p-2 bg-blue-400 gap-2 mx-4 text-white"}>
