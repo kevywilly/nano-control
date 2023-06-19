@@ -21,7 +21,6 @@ export default function NavBar(){
             <div className="navbar">
                 <NavBarItem name="Dashboard" route="/"/>
                 <NavBarItem name="Training" route="/training"/>
-                <NavBarItem name="Calibration" route="/calibration"/>
                 <div className="flex-grow"></div>
             </div>
             <div>
