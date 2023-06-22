@@ -71,7 +71,7 @@ export default function Training() {
     }
     return (
         <div className="text-white text-xs p-12 flex flex-row gap-2 max-h-screen">
-            <div className="flex flex-col gap-2 w-40">
+            <div className="flex flex-col gap-2 w-fit min-w-fit">
                 { categories && categories.map((cat) => (
                     <button
                         className={`p-1 pl-4 w-full rounded-lg  text-left  ${cat === category ? 'bg-blue-400' : ''}`}
@@ -83,7 +83,7 @@ export default function Training() {
                 ))
                 }
             </div>
-            <div className={"flex flex-col gap-2 max-h-3/4 overflow-y-scroll border-2 rounded-lg p-2 bg-blue-400"} onKeyDown={(e) => checkKey(e)}>
+            <div className={"flex flex-col gap-2 w-fit min-w-fit max-h-3/4 overflow-y-scroll border-2 rounded-lg p-2 bg-blue-400"} onKeyDown={(e) => checkKey(e)}>
                 { images && images.map((img, index) => (
                     <button
                         className={`p-1 pl-4 w-full rounded-lg  text-left  ${index === selectedIndex ? 'bg-blue-800' : ''}`}
@@ -95,7 +95,7 @@ export default function Training() {
                 ))}
             </div>
             {category &&
-            <div className="border-2 rounded-lg p-2 bg-blue-400 flex flex-col gap-2">
+            <div className="border-2 rounded-lg p-2 min-w-100 bg-blue-400 flex flex-col gap-2">
                 {image &&
                     <img src={api.routes.training_image_url(category.name, image)} alt="Training"/>
                 }

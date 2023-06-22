@@ -4,7 +4,7 @@ import {useQuery, useQueryClient} from "react-query";
 import {AppSettings} from "../constants";
 import {Joystick} from 'react-joystick-component';
 import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
-import VideoStream, {VideoMode} from "./video";
+import VideoStream from "./video";
 
 const between = (v: number, a1: number, a2: number) => {
     if(a1 < a2)
@@ -55,14 +55,12 @@ const calcAngle = (x: number | null, y: number | null) => {
     return a
 }
 
-const modes = [VideoMode.mode3d, VideoMode.modeMapped, VideoMode.modeRaw]
 
 export default function Dashboard() {
 
     const [cmd, setCmd] = useState<string>("stop")
     const [speed, setSpeed] = useState<number>(AppSettings.defaultSpeed)
     const [autodrive, setAutodrive] = useState(false)
-    const [videoMode, setVideoMode] = useState(0)
     const queryClient = useQueryClient()
 
     const {
@@ -85,8 +83,6 @@ export default function Dashboard() {
             setSpeed(s)
         }
     }
-
-    const changeMode = () => setVideoMode(videoMode < 2 ? videoMode + 1 : 0)
 
     const handleMove2 = (e: IJoystickUpdateEvent) => {
 
@@ -132,34 +128,37 @@ export default function Dashboard() {
         api.methods.collect_image(category.name).then(() => queryClient.invalidateQueries("categories"))
 
     return (
-        <div className = "flex flex-col w-full items-center mt-8">
-            <div className="w-full flex flex-row justify-center z-10">
-                <button className="button bg-blue-500 w-1/4 opacity-50" onClick={changeMode}>{modes[videoMode]}</button>
+        <div>
+            <div className="flex flex-col items-center w-screen mt-4">
+                <img
+                    className="rounded-lg"
+                    src={`${api.routes.stream_url}`}
+                    alt="Jetson Rover Stream 3d"
+                    content="multipart/x-mixed-replace; boundary=frame"
+                />
             </div>
-            <div className="flex flex-row items-center justify-center p-4 w-3/4 gap-2 -mt-16">
-                <div className="flex flex-col gap-3 justify-between">
-                    <button onClick={speedUp} className="button-xs bg-green-400 w-full">+</button>
-                    <button className="button-xs bg-gray-200 w-full">{Math.round(speed*100)}</button>
-                    <button onClick={speedDown} className="button-xs bg-red-400 w-full">-</button>
-                    <button onClick={handleAutoDrive}
-                            className={`button-xs ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"} w-full`}>
-                        Auto {autodrive ? "OFF" : "ON"}
-                    </button>
-                </div>
-                <div className={`${videoMode > 0 ? 'w-full lg:w-5/12' : 'w-full'}`}>
-                    <VideoStream mode={modes[videoMode]} />
-                </div>
-                <div className="flex flex-col gap-2 justify-between">
-                    { categories && categories.map((k) => (
-                        <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
-                    ))
-                    }
-                </div>
+            <div className="absolute top-16 left-8 flex flex-col gap-2 justify-between">
+                <button onClick={speedUp} className="button-xs bg-green-400 w-full">+</button>
+                <button className="button-xs bg-gray-200 w-full">{Math.round(speed*100)}</button>
+                <button onClick={speedDown} className="button-xs bg-red-400 w-full">-</button>
+                <button onClick={handleAutoDrive}
+                        className={`button-xs ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"} w-full`}>
+                    Auto {autodrive ? "OFF" : "ON"}
+                </button>
             </div>
-            <div className="flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60">
+            <div className="absolute top-16 right-8 flex flex-col gap-2 justify-between">
+                { categories && categories.map((k) => (
+                    <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
+                ))
+                }
+            </div>
+            <div className="absolute bottom-32 flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60">
                 <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
                 <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
             </div>
         </div>
+
+
+
     )
 }
