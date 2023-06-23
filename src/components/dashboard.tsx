@@ -4,7 +4,6 @@ import {useQuery, useQueryClient} from "react-query";
 import {AppSettings} from "../constants";
 import {Joystick} from 'react-joystick-component';
 import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
-import VideoStream from "./video";
 
 const between = (v: number, a1: number, a2: number) => {
     if(a1 < a2)
@@ -129,12 +128,20 @@ export default function Dashboard() {
 
     return (
         <div>
-            <div className="flex flex-col items-center w-screen mt-4">
+            <div className="flex flex-col  items-center w-screen mt-4">
                 <img
                     className="rounded-lg"
-                    src={`${api.routes.stream_url}`}
+                    src={`${api.routes.stream_url}/input2`}
                     alt="Jetson Rover Stream 3d"
                     content="multipart/x-mixed-replace; boundary=frame"
+                    width="720px"
+                />
+                <img
+                    className="rounded-lg"
+                    src={`${api.routes.stream_url}/input1`}
+                    alt="Jetson Rover Stream 3d"
+                    content="multipart/x-mixed-replace; boundary=frame"
+                    width="720px"
                 />
             </div>
             <div className="absolute top-16 left-8 flex flex-col gap-2 justify-between">
