@@ -24,18 +24,18 @@ export default function Training() {
     }
 
     useEffect(() => {
-        if(categories) {
+        if (categories) {
             setCategory(categories[0])
         }
     }, [categories])
 
     useEffect(() => {
-        if(category){
+        if (category) {
             api.methods.getTrainingImages(category.name).then((r: ImagesResponse) => {
                 setImages(r.images)
                 setReloadImages(false)
-                if(r.images && r.images.length > 0) {
-                    if(selectedIndex > r.images.length-1) {
+                if (r.images && r.images.length > 0) {
+                    if (selectedIndex > r.images.length - 1) {
                         setImage(r.images[0])
                     } else {
                         setImage(r.images[selectedIndex])
@@ -48,17 +48,17 @@ export default function Training() {
     function checkKey(e: any) {
         console.log(e)
         if (e.keyCode === 38) {
-            if(selectedIndex > 0) {
-                setSelectedIndex(selectedIndex-1)
+            if (selectedIndex > 0) {
+                setSelectedIndex(selectedIndex - 1)
             }
-        }
-        else if (e.keyCode === 40) {
-            if(selectedIndex < images.length-1) {
-                setSelectedIndex(selectedIndex+1)
+        } else if (e.keyCode === 40) {
+            if (selectedIndex < images.length - 1) {
+                setSelectedIndex(selectedIndex + 1)
             }
         }
 
     }
+
     const handleSelectCategory = (category: CategoryCount) => {
         setCategory(category)
         setSelectedIndex(0)
@@ -70,11 +70,11 @@ export default function Training() {
         })
     }
     return (
-        <div className="text-white text-xs p-12 flex flex-row gap-2 max-h-screen">
-            <div className="flex flex-col gap-2 w-fit min-w-fit">
-                { categories && categories.map((cat) => (
+        <div>
+            <div className="absolute top-12 left-8 right-4 flex flex-row gap-4 text-xs justify-center">
+                {categories && categories.map((cat) => (
                     <button
-                        className={`p-1 pl-4 w-full rounded-lg  text-left  ${cat === category ? 'bg-blue-400' : ''}`}
+                        className={`text-white text-left ${cat === category ? 'font-bold' : ''}`}
                         key={cat.name}
                         onClick={() => handleSelectCategory(cat)}
                     >
@@ -83,10 +83,12 @@ export default function Training() {
                 ))
                 }
             </div>
-            <div className={"flex flex-col gap-2 w-fit min-w-fit max-h-3/4 overflow-y-scroll border-2 rounded-lg p-2 bg-blue-400"} onKeyDown={(e) => checkKey(e)}>
-                { images && images.map((img, index) => (
+            <div className="absolute left-8 top-20 bottom-16 right-8 flex flex-row justify-center gap-2">
+            <div className="flex flex-col gap-2 rounded-md text-gray-50 bg-gray-700 border-gray-200 overflow-y-scroll p-2"
+                onKeyDown={(e) => checkKey(e)}>
+                {images && images.map((img, index) => (
                     <button
-                        className={`p-1 pl-4 w-full rounded-lg  text-left  ${index === selectedIndex ? 'bg-blue-800' : ''}`}
+                        className={`p-1 pl-4 text-left text-xs ${index === selectedIndex ? 'bg-blue-800' : ''}`}
                         key={img}
                         onClick={() => handleSelect(index)}
                     >
@@ -94,16 +96,22 @@ export default function Training() {
                     </button>
                 ))}
             </div>
-            {category &&
-            <div className="border-2 rounded-lg p-2 min-w-100 bg-blue-400 flex flex-col gap-2">
-                {image &&
-                    <img src={api.routes.training_image_url(category.name, image)} alt="Training"/>
+            <div className="p-2 flex flex-col gap-2 bg-gray-700 rounded-md">
+                {category && image &&
+                            <img
+                                className="w-720 aspect-video rounded-sm"
+                                src={api.routes.training_image_url(category.name, image)} alt="Training"
+                                width="640px"
+                            />
+                        }
+                {category &&
+                    <button className="text-base font-semibold text-gray-50"
+                            onClick={() => handleDelete(category.name, selectedIndex)}>
+                        Delete
+                    </button>
                 }
-                <button className = "text-base font-semibold text-white" onClick={() => handleDelete(category.name, selectedIndex)}>
-                    Delete
-                </button>
             </div>
-            }
+            </div>
         </div>
     )
 }
