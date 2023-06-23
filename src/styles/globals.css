@@ -9,7 +9,7 @@
     .button-xs {@apply button bg-stone-200 text-xs font-semibold }
 
     .navbar {
-        @apply flex flex-row items-center gap-4 w-full bg-stone-50 text-sm text-purple-900 font-normal h-10 px-4 uppercase
+        @apply flex flex-row items-center gap-4 w-full bg-stone-50 text-xs text-black font-normal h-10 px-4 uppercase opacity-50 fixed top-0 h-8
     }
 
     .navbar-item {

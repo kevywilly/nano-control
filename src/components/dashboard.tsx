@@ -134,14 +134,14 @@ export default function Dashboard() {
                     src={`${api.routes.stream_url}/input2`}
                     alt="Jetson Rover Stream 3d"
                     content="multipart/x-mixed-replace; boundary=frame"
-                    width="720px"
+                    width="640px"
                 />
                 <img
                     className="rounded-lg"
                     src={`${api.routes.stream_url}/input1`}
                     alt="Jetson Rover Stream 3d"
                     content="multipart/x-mixed-replace; boundary=frame"
-                    width="720px"
+                    width="650px"
                 />
             </div>
             <div className="absolute top-16 left-8 flex flex-col gap-2 justify-between">
