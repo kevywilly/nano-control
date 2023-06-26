@@ -98,7 +98,7 @@ export default function Training() {
             </div>
             <div className="p-2 flex flex-col gap-2 bg-gray-700 rounded-md">
                 {category && image &&
-                    <div>
+                    <div className="flex flex-col gap-y-4">
                         <img
                             className="aspect-video rounded-sm"
                             src={`${api.routes.training_image_url(category.name, image)}/2`} alt="Training"
