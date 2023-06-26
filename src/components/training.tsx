@@ -101,12 +101,12 @@ export default function Training() {
                     <div>
                         <img
                             className="aspect-video rounded-sm"
-                            src={`${api.routes.training_image_url(category.name, image)}/1`} alt="Training"
+                            src={`${api.routes.training_image_url(category.name, image)}/2`} alt="Training"
                             width="420px"
                         />
                         <img
                             className="aspect-video rounded-sm"
-                            src={`${api.routes.training_image_url(category.name, image)}/2`} alt="Training"
+                            src={`${api.routes.training_image_url(category.name, image)}/1`} alt="Training"
                             width="420px"
                         />
                     </div>
