@@ -1,4 +1,4 @@
-import {useQuery} from "react-query";
+import {useQuery, useQueryClient} from "react-query";
 import {api, CategoryCount, ImagesResponse} from "../api/nano-api";
 import React, {useEffect, useState} from "react";
 
@@ -10,6 +10,7 @@ export default function Training() {
     const [image, setImage] = useState<string>()
     const [images, setImages] = useState<string[]>([])
     const [reloadImages, setReloadImages] = useState(false)
+    const queryClient = useQueryClient()
 
     const {
         data: categories
@@ -66,6 +67,7 @@ export default function Training() {
     const handleDelete = (category: string, index: number) => {
         api.methods.deleteTrainingImage(category, images![index]).then(_ => {
             setImage(undefined)
+            queryClient.invalidateQueries("categories")
             setReloadImages(true)
         })
     }

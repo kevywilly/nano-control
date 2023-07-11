@@ -30,7 +30,7 @@ async function drive(cmd: string, speed: number = 25) {
 }
 
 async function collect_image(category: string){
-    const {data} = await axios.post(`${CATEGORY_PATH(category)}/collect`)
+    const {data} = await axios.get(`${CATEGORY_PATH(category)}/collect`)
     return data
 }
 
