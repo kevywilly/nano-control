@@ -26,9 +26,16 @@ export default function Training() {
 
     useEffect(() => {
         if (categories) {
+            if (category) {
+                const cat = categories.find(c => c.name === category.name)
+                if(cat) {
+                    setCategory(cat)
+                    return
+                }
+            }
             setCategory(categories[0])
         }
-    }, [categories])
+    }, [categories, category])
 
     useEffect(() => {
         if (category) {
