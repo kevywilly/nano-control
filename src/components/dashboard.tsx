@@ -128,14 +128,7 @@ export default function Dashboard() {
 
     return (
         <div>
-            <div className="flex flex-col  items-center w-screen mt-4">
-                <img
-                    className="rounded-lg"
-                    src={`${api.routes.stream_url}/input2`}
-                    alt="Jetson Rover Stream 3d"
-                    content="multipart/x-mixed-replace; boundary=frame"
-                    width="640px"
-                />
+            <div className="flex flex-col  items-center w-screen mt-12">
                 <img
                     className="rounded-lg"
                     src={`${api.routes.stream_url}/input1`}
@@ -159,7 +152,7 @@ export default function Dashboard() {
                 ))
                 }
             </div>
-            <div className="absolute bottom-32 flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60">
+            <div className="absolute bottom-48 flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60">
                 <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
                 <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
             </div>
