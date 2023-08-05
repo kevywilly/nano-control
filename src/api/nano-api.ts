@@ -9,6 +9,19 @@ const CALIBRATION_PATH = `${API_PATH}/calibration`
 const CATEGORY_PATH = (category: string) => `${API_PATH}/categories/${category}`
 const DRIVE_PATH = (cmd: string, speed: number) => `${API_PATH}/drive/${cmd.toLowerCase()}/${speed}`
 
+const TWIST_PATH = `${API_PATH}/twist`
+
+export const TWIST_ZERO: Twist = {linear: {x: 0, y:0, z:0}, angular: {x:0, y:0, z:0}}
+
+export interface Velocity {
+    x: number
+    y: number
+    z: number
+}
+export interface Twist {
+    linear?: Velocity
+    angular?: Velocity
+}
 export interface ImagesResponse {
     images: string[]
 }
@@ -26,6 +39,11 @@ export interface AutoDriveResponse {
 }
 async function drive(cmd: string, speed: number = 25) {
     const {data} = await axios.get(DRIVE_PATH(cmd, speed))
+    return data
+}
+
+async function twist(twist: Twist) {
+    const {data} = await axios.post(TWIST_PATH, twist)
     return data
 }
 
@@ -103,6 +121,7 @@ export const api = {
         calibration_image_url: (camera: string, name: string) => `${CALIBRATION_PATH}/${camera}/images/${name}`
     },
     methods: {
+        twist,
         autodrive,
         drive,
         collect_image,
