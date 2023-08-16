@@ -143,8 +143,8 @@ export default function Dashboard() {
                 }
             </div>
             <div className="absolute bottom-48 flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60">
-                <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={30} />
-                <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={30} />
+                <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={10} />
+                <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={10} />
             </div>
             <div className="absolute text-white bottom-24 flex flex-row w-full justify-center">
                 <div className="flex flex-col gap-2">
