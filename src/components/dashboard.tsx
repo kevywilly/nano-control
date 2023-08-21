@@ -76,7 +76,7 @@ export default function Dashboard() {
 
     const handleMove1 = (e: IJoystickUpdateEvent) => {
         setTwist({
-            linear: {x: e.y || 0, y: e.x || 0, z: 0},
+            linear: {x: e.y || 0, y: 0, z: 0},
             angular: {x: 0, y: 0, z: 0 }
         })
     }
