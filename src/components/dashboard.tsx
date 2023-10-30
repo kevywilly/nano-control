@@ -54,6 +54,9 @@ const calcAngle = (x: number | null, y: number | null) => {
     return a
 }
 
+const DRIVE_MODE: number = 0
+const LINEAR_SPEED_FACTOR: number = 0.2
+const ANGULAR_SPEED_FACTOR: number = -0.4
 
 export default function Dashboard() {
 
@@ -62,6 +65,7 @@ export default function Dashboard() {
     const queryClient = useQueryClient()
     const [twist, setTwist] = useState<Twist>(TWIST_ZERO)
     const [twistResponse, setTwistResponse] = useState<Twist>(TWIST_ZERO)
+
 
     const {
         data: categories
@@ -75,23 +79,41 @@ export default function Dashboard() {
     },[twist])
 
     const handleMove1 = (e: IJoystickUpdateEvent) => {
+
+        let ly: number = 0
+        let az: number  = 0
+
+        let lx:number = (e.y || 0)
+
+        if(DRIVE_MODE === 0) {
+            ly = 0
+            az = e.x || 0
+            if(Math.abs(az) < Math.abs(lx)) {
+                az = 0
+            } else {
+                lx = 0
+            }
+        } else {
+            ly = e.x || 0
+            az = 0
+        }
         setTwist({
-            linear: {x: e.y || 0, y: e.x || 0, z: 0},
-            angular: {x: 0, y: 0, z: 0 }
+            linear: {x: lx, y: ly, z: 0},
+            angular: {x: 0, y: 0, z: -az}
         })
     }
 
     const handleMove2 = (e: IJoystickUpdateEvent) => {
         setTwist({
             linear: {x: 0, y: 0, z: 0 },
-            angular: {x: 0, y: 0, z: e.x || 0 }
+            angular: {x: 0, y: 0, z: -(e.x || 0) }
         })
     }
 
     const handleStop = (e: IJoystickUpdateEvent) => {
         setTwist({
-            linear: {x: 0, y: 0, z: 0 },
-            angular: {x: 0, y: 0, z: 0 }
+            linear: {x: 0.0, y: 0.0, z: 0.0 },
+            angular: {x: 0.0, y: 0.0, z: 0.0 }
         })
         setCmd("stop")
     }
@@ -121,7 +143,7 @@ export default function Dashboard() {
             <div className="flex flex-col  items-center w-screen mt-12">
                 <img
                     className="rounded-lg"
-                    src={`${api.routes.stream_url}/input1`}
+                    src={`${api.routes.stream_url}`}
                     alt="Jetson Rover Stream 3d"
                     content="multipart/x-mixed-replace; boundary=frame"
                     width="650px"
@@ -143,15 +165,20 @@ export default function Dashboard() {
                 }
             </div>
             <div className="absolute bottom-48 flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60">
-                <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={10} />
-                <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={10} />
+                <Joystick  size={DRIVE_MODE > 0 ? 100 : 150} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={10} />
+                {DRIVE_MODE > 0 && (
+                    <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={10} />
+                )}
             </div>
+
             <div className="absolute text-white bottom-24 flex flex-row w-full justify-center">
                 <div className="flex flex-col gap-2">
                     <div>Linear: ({twistResponse?.linear?.x}, {twistResponse?.linear?.y}, {twistResponse?.linear?.z})</div>
                     <div>Angular: ({twistResponse?.angular?.x}, {twistResponse?.angular?.y}, {twistResponse?.angular?.z})</div>
                 </div>
             </div>
+
+
         </div>
 
 
