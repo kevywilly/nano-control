@@ -1,16 +1,19 @@
 import React, {useEffect, useState} from "react";
 import {api, CategoryCount, Twist, TWIST_ZERO} from "../api/nano-api";
 import {useQuery, useQueryClient} from "react-query";
-import {AppSettings} from "../constants";
 import {Joystick} from 'react-joystick-component';
 import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
 
+/*
 const between = (v: number, a1: number, a2: number) => {
     if(a1 < a2)
         return v >= a1 && v <= a2
     else
         return v <= a1 && v >= a2
 }
+
+ */
+/*
 const get_cmd = (a: number) => {
     if(between(a, -22.5, 22.5))
         return "slide_right"
@@ -30,6 +33,8 @@ const get_cmd = (a: number) => {
         return "backward_right"
 
 }
+
+ */
 const CategoryButton = (props: {category: CategoryCount, onClick: (category: CategoryCount) => void}) => {
 
     const {category, onClick} = props
@@ -45,6 +50,7 @@ const CategoryButton = (props: {category: CategoryCount, onClick: (category: Cat
         )
 }
 
+/*
 const calcAngle = (x: number | null, y: number | null) => {
     x = x || 0
     y = y || 0
@@ -53,14 +59,12 @@ const calcAngle = (x: number | null, y: number | null) => {
     console.log(a)
     return a
 }
+*/
 
 const DRIVE_MODE: number = 0
-const LINEAR_SPEED_FACTOR: number = 0.2
-const ANGULAR_SPEED_FACTOR: number = -0.4
 
 export default function Dashboard() {
 
-    const [cmd, setCmd] = useState<string>("stop")
     const [autodrive, setAutodrive] = useState(false)
     const queryClient = useQueryClient()
     const [twist, setTwist] = useState<Twist>(TWIST_ZERO)
@@ -110,19 +114,18 @@ export default function Dashboard() {
         })
     }
 
-    const handleStop = (e: IJoystickUpdateEvent) => {
+    const handleStop = (e?: IJoystickUpdateEvent) => {
         setTwist({
             linear: {x: 0.0, y: 0.0, z: 0.0 },
             angular: {x: 0.0, y: 0.0, z: 0.0 }
         })
-        setCmd("stop")
     }
 
     const handleAutoDrive = () => {
         api.methods.autodrive().then((v) => {
             setAutodrive(v.autodrive)
             if(!v.autodrive) {
-                setCmd("stop")
+                handleStop()
             }
         })
     }
@@ -139,45 +142,44 @@ export default function Dashboard() {
         api.methods.collect_image(category.name).then(() => queryClient.invalidateQueries("categories"))
 
     return (
-        <div>
-            <div className="flex flex-col  items-center w-screen mt-12">
+        <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-row  items-center mt-12 gap-4">
+                <div className="flex flex-col gap-2 justify-between">
+                    <button onClick={speedUp} className="button-xs bg-green-400 w-full">+</button>
+                    <button className="button-xs bg-gray-200 w-full">NA</button>
+                    <button onClick={speedDown} className="button-xs bg-red-400 w-full">-</button>
+                    <button onClick={handleAutoDrive}
+                            className={`button-xs ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"} w-full`}>
+                        Auto {autodrive ? "OFF" : "ON"}
+                    </button>
+                </div>
                 <img
                     className="rounded-lg"
                     src={`${api.routes.stream_url}`}
                     alt="Jetson Rover Stream 3d"
                     content="multipart/x-mixed-replace; boundary=frame"
-                    width="650px"
+                    width="640px"
+                    height="480px"
                 />
-            </div>
-            <div className="absolute top-16 left-8 flex flex-col gap-2 justify-between">
-                <button onClick={speedUp} className="button-xs bg-green-400 w-full">+</button>
-                <button className="button-xs bg-gray-200 w-full">NA</button>
-                <button onClick={speedDown} className="button-xs bg-red-400 w-full">-</button>
-                <button onClick={handleAutoDrive}
-                        className={`button-xs ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"} w-full`}>
-                    Auto {autodrive ? "OFF" : "ON"}
-                </button>
-            </div>
-            <div className="absolute top-16 right-8 flex flex-col gap-2 justify-between">
-                { categories && categories.map((k) => (
-                    <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
-                ))
-                }
-            </div>
-            <div className="absolute bottom-48 flex flex-row w-full justify-center gap-24 xl:gap-48 opacity-60">
-                <Joystick  size={DRIVE_MODE > 0 ? 100 : 150} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={10} />
-                {DRIVE_MODE > 0 && (
-                    <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={10} />
-                )}
-            </div>
-
-            <div className="absolute text-white bottom-24 flex flex-row w-full justify-center">
-                <div className="flex flex-col gap-2">
-                    <div>Linear: ({twistResponse?.linear?.x}, {twistResponse?.linear?.y}, {twistResponse?.linear?.z})</div>
-                    <div>Angular: ({twistResponse?.angular?.x}, {twistResponse?.angular?.y}, {twistResponse?.angular?.z})</div>
+                <div className="flex flex-col gap-2 justify-between">
+                    { categories && categories.map((k) => (
+                        <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
+                    ))
+                    }
                 </div>
             </div>
 
+            <Joystick  size={DRIVE_MODE > 0 ? 100 : 150} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={10} />
+            {DRIVE_MODE > 0 && (
+                <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={10} />
+            )}
+
+            <div className="text-white flex flex-row w-full justify-center">
+                <div className="flex flex-row gap-2">
+                    <div>Linear: ({twistResponse?.linear?.x}, {twistResponse?.linear?.y})</div>
+                    <div>Angular: {twistResponse?.angular?.z}</div>
+                </div>
+            </div>
 
         </div>
 
