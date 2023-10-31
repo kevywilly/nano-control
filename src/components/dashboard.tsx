@@ -44,7 +44,7 @@ const CategoryButton = (props: {category: CategoryCount, onClick: (category: Cat
                 <button
                     onClick={() => onClick(category)}
                     className="button-xs bg-stone-700 w-full text-white"
-                >{category.name}<br/>({category.count})</button>
+                >Capture: {category.name}<br/>({category.count})</button>
                 <div className="text-center font-bold text-xl"></div>
             </div>
         )
@@ -65,7 +65,6 @@ const DRIVE_MODE: number = 0
 
 export default function Dashboard() {
 
-    const [autodrive, setAutodrive] = useState(false)
     const queryClient = useQueryClient()
     const [twist, setTwist] = useState<Twist>(TWIST_ZERO)
     const [twistResponse, setTwistResponse] = useState<Twist>(TWIST_ZERO)
@@ -107,51 +106,16 @@ export default function Dashboard() {
         })
     }
 
-    const handleMove2 = (e: IJoystickUpdateEvent) => {
-        setTwist({
-            linear: {x: 0, y: 0, z: 0 },
-            angular: {x: 0, y: 0, z: -(e.x || 0) }
-        })
-    }
-
-    const handleStop = (e?: IJoystickUpdateEvent) => {
-        setTwist({
-            linear: {x: 0.0, y: 0.0, z: 0.0 },
-            angular: {x: 0.0, y: 0.0, z: 0.0 }
-        })
-    }
-
-    const handleAutoDrive = () => {
-        api.methods.autodrive().then((v) => {
-            setAutodrive(v.autodrive)
-            if(!v.autodrive) {
-                handleStop()
-            }
-        })
-    }
-
-    const speedDown = () => {
-
-    }
-
-    const speedUp = () => {
-
-    }
-
     const handleCategoryClick = (category: CategoryCount) =>
         api.methods.collect_image(category.name).then(() => queryClient.invalidateQueries("categories"))
 
     return (
-        <div className="flex flex-col items-center gap-4">
-            <div className="flex flex-row  items-center mt-12 gap-4">
-                <div className="flex flex-col gap-2 justify-between">
-                    <button onClick={speedUp} className="button-xs bg-green-400 w-full">+</button>
-                    <button className="button-xs bg-gray-200 w-full">NA</button>
-                    <button onClick={speedDown} className="button-xs bg-red-400 w-full">-</button>
-                    <button onClick={handleAutoDrive}
-                            className={`button-xs ${autodrive ? "bg-green-500 text-white" : "bg-gray-100 text-black"} w-full`}>
-                        Auto {autodrive ? "OFF" : "ON"}
-                    </button>
+        <div className="flex flex-col items-center gap-4 mt-10">
+                <div className="flex flex-row gap-2 justify-between w-full">
+                    { categories && categories.map((k) => (
+                        <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
+                    ))
+                    }
                 </div>
                 <img
                     className="rounded-lg"
@@ -161,18 +125,9 @@ export default function Dashboard() {
                     width="640px"
                     height="480px"
                 />
-                <div className="flex flex-col gap-2 justify-between">
-                    { categories && categories.map((k) => (
-                        <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
-                    ))
-                    }
-                </div>
-            </div>
 
-            <Joystick  size={DRIVE_MODE > 0 ? 100 : 150} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleStop} minDistance={10} />
-            {DRIVE_MODE > 0 && (
-                <Joystick  size={100} sticky={false} baseColor="grey" stickColor="white" move={handleMove2} stop={handleStop} minDistance={10} />
-            )}
+
+            <Joystick  size={DRIVE_MODE > 0 ? 100 : 150} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleMove1} minDistance={10} />
 
             <div className="text-white flex flex-row w-full justify-center">
                 <div className="flex flex-row gap-2">
