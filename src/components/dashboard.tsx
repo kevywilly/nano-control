@@ -90,7 +90,7 @@ const ControlPanel = (props : {onClick: (x: number, y: number, z: number) => voi
                 </button>
             </div>
             <div className="col-span-full">
-                <button className="bg-yellow-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(1.0, 0.0, 0.0)}>
+                <button className="bg-yellow-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(-1.0, 0.0, 0.0)}>
                     Reverse
                 </button>
             </div>
