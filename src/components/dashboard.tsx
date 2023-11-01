@@ -68,7 +68,7 @@ const DRIVE_MODE: number = 0
 const ControlPanel = (props : {onClick: (x: number, y: number, z: number) => void}) => {
     const {onClick} = props
     return (
-        <div className="grid grid-cols-3 text-white font-bold gap-4">
+        <div className="grid grid-cols-3 text-white font-bold gap-4 w-1/2">
             <div className="col-span-full text-center">
                 <button className="bg-green-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(1.0, 0.0, 0.0)}>
                     Forward
@@ -80,7 +80,7 @@ const ControlPanel = (props : {onClick: (x: number, y: number, z: number) => voi
                 </button>
             </div>
             <div className="col-span-1">
-                <button className="bg-red-800 px-2 py-6 rounded-md" onClick={() => onClick(0.0, 0.0, 0.0)}>
+                <button className="bg-red-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(0.0, 0.0, 0.0)}>
                     Stop
                 </button>
             </div>
@@ -173,7 +173,7 @@ export default function Dashboard() {
                     <div>Angular: {twistResponse?.angular?.z}</div>
                 </div>
             </div>
-            <div className="flex flex-row gap-12 items-center">
+            <div className="flex flex-row gap-4 items-center w-full justify-center">
                 <ControlPanel onClick={handleControlClick}/>
                 <Joystick  size={DRIVE_MODE > 0 ? 100 : 150} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleMove1} minDistance={10} />
             </div>
