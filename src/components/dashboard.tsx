@@ -35,7 +35,7 @@ const get_cmd = (a: number) => {
 }
 
  */
-const SPEED = 0.5
+const SPEED = 0.25
 
 const CategoryButton = (props: {category: CategoryCount, onClick: (category: CategoryCount) => void}) => {
 
