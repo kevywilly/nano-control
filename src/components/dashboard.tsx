@@ -4,39 +4,6 @@ import {useQuery, useQueryClient} from "react-query";
 import {Joystick} from 'react-joystick-component';
 import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
 
-/*
-const between = (v: number, a1: number, a2: number) => {
-    if(a1 < a2)
-        return v >= a1 && v <= a2
-    else
-        return v <= a1 && v >= a2
-}
-
- */
-/*
-const get_cmd = (a: number) => {
-    if(between(a, -22.5, 22.5))
-        return "slide_right"
-    if(between(a, 22.5, 67.5))
-        return "forward_right"
-    if(between(a, 67.5, 112.5))
-        return "forward"
-    if(between(a, 112.5, 157.5))
-        return "forward_left"
-    if( a > 157.5 || a < (-157.5))
-        return "slide_left"
-    if(between(a, -112.5, -157.5))
-        return "backward_left"
-    if(between(a, -112.5, -67.5))
-        return "backward"
-    if(between(a, -67.5, -22.5))
-        return "backward_right"
-
-}
-
- */
-const SPEED = 0.25
-
 const CategoryButton = (props: {category: CategoryCount, onClick: (category: CategoryCount) => void}) => {
 
     const {category, onClick} = props
@@ -52,45 +19,34 @@ const CategoryButton = (props: {category: CategoryCount, onClick: (category: Cat
         )
 }
 
-/*
-const calcAngle = (x: number | null, y: number | null) => {
-    x = x || 0
-    y = y || 0
-    let a = Math.acos(x / Math.sqrt((x * x) + (y * y))) * 57.2958
-    a = y < 0 ? -a : a
-    console.log(a)
-    return a
-}
-*/
-
 const DRIVE_MODE: number = 0
 
-const ControlPanel = (props : {onClick: (x: number, y: number, z: number) => void}) => {
+const ControlPanel = (props : {onClick: (x: number, y: number, z: number, speed: number) => void}) => {
     const {onClick} = props
     return (
         <div className="grid grid-cols-3 text-white font-bold gap-4 w-1/2">
             <div className="col-span-full text-center">
-                <button className="bg-green-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(1.0, 0.0, 0.0)}>
+                <button className="bg-green-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(1.0, 0.0, 0.0, 0.3)}>
                     Forward
                 </button>
             </div>
             <div className="col-span-1">
-                <button className="bg-orange-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(0.0, 0.0, 1.0)}>
+                <button className="bg-orange-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(0.0, 0.0, 1.0, 0.2)}>
                     Left
                 </button>
             </div>
             <div className="col-span-1">
-                <button className="bg-red-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(0.0, 0.0, 0.0)}>
+                <button className="bg-red-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(0.0, 0.0, 0.0, 0.0)}>
                     Stop
                 </button>
             </div>
             <div className="col-span-1">
-                <button className="bg-orange-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(0.0, 0.0, -1.0)}>
+                <button className="bg-orange-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(0.0, 0.0, -1.0, 0.2)}>
                     Right
                 </button>
             </div>
             <div className="col-span-full">
-                <button className="bg-yellow-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(-1.0, 0.0, 0.0)}>
+                <button className="bg-yellow-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(-1.0, 0.0, 0.0, 0.3)}>
                     Reverse
                 </button>
             </div>
@@ -102,6 +58,7 @@ export default function Dashboard() {
     const queryClient = useQueryClient()
     const [twist, setTwist] = useState<Twist>(TWIST_ZERO)
     const [twistResponse, setTwistResponse] = useState<Twist>(TWIST_ZERO)
+    const [capture, setCapture] = useState(true)
 
 
     const {
@@ -115,11 +72,34 @@ export default function Dashboard() {
         api.methods.twist(twist).then(setTwistResponse)
     },[twist])
 
-    const handleControlClick = (x: number, y: number, z: number) => {
+    const both_non_zero = (a?: number, b?: number): boolean => (((a || 0) !== 0) && ((b || 0) !== 0))
+
+    const handleControlClick = (x: number, y: number, z: number, speed: number) => {
+
+        if(both_non_zero(x, twist.linear?.x) || both_non_zero(y, twist.linear?.y) || both_non_zero(z, twist.angular?.z)) {
+            setTwist(TWIST_ZERO)
+            return
+        }
+
         setTwist({
-            linear: {x: x*SPEED, y: y*SPEED, z: 0},
-            angular: {x: 0, y: 0, z: z*SPEED}
+            linear: {x: x*speed, y: y*speed, z: 0},
+            angular: {x: 0, y: 0, z: z*speed}
         })
+
+        let cat: string | undefined = undefined
+
+        if(capture) {
+            if(x > 0) {
+                cat = "forward"
+            } else if (z > 0) {
+                cat = "left"
+            } else if (z < 0) {
+                cat = "right"
+            }
+        }
+        if(cat) {
+            api.methods.collect_image(cat).then(() => queryClient.invalidateQueries("categories"))
+        }
     }
 
     const handleMove1 = (e: IJoystickUpdateEvent) => {
@@ -167,12 +147,14 @@ export default function Dashboard() {
                     height="480px"
                 />
 
-            <div className="text-white flex flex-row w-full justify-center">
-                <div className="flex flex-row gap-2">
+            <div className="text-white flex flex-row justify-center gap-10 items-center">
+
                     <div>Linear: ({twistResponse?.linear?.x}, {twistResponse?.linear?.y})</div>
                     <div>Angular: {twistResponse?.angular?.z}</div>
-                </div>
+                    <button className={`font-bold rounded-md py-2 px-4 ${capture ? "bg-green-500" : "bg-red-600"}`} onClick={() => setCapture(!capture)}>{`Capture is: ${capture ? "ON" : "OFF"}`}</button>
+
             </div>
+
             <div className="flex flex-row gap-4 items-center w-full justify-center">
                 <ControlPanel onClick={handleControlClick}/>
                 <Joystick  size={DRIVE_MODE > 0 ? 100 : 150} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleMove1} minDistance={10} />
