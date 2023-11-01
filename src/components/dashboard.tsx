@@ -35,6 +35,8 @@ const get_cmd = (a: number) => {
 }
 
  */
+const SPEED = 0.5
+
 const CategoryButton = (props: {category: CategoryCount, onClick: (category: CategoryCount) => void}) => {
 
     const {category, onClick} = props
@@ -63,6 +65,38 @@ const calcAngle = (x: number | null, y: number | null) => {
 
 const DRIVE_MODE: number = 0
 
+const ControlPanel = (props : {onClick: (x: number, y: number, z: number) => void}) => {
+    const {onClick} = props
+    return (
+        <div className="grid grid-cols-3 text-white font-bold gap-4">
+            <div className="col-span-full text-center">
+                <button className="bg-green-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(1.0, 0.0, 0.0)}>
+                    Forward
+                </button>
+            </div>
+            <div className="col-span-1">
+                <button className="bg-orange-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(0.0, 0.0, 1.0)}>
+                    Left
+                </button>
+            </div>
+            <div className="col-span-1">
+                <button className="bg-red-800 px-2 py-6 rounded-md" onClick={() => onClick(0.0, 0.0, 0.0)}>
+                    Stop
+                </button>
+            </div>
+            <div className="col-span-1">
+                <button className="bg-orange-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(0.0, 0.0, -1.0)}>
+                    Right
+                </button>
+            </div>
+            <div className="col-span-full">
+                <button className="bg-yellow-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(1.0, 0.0, 0.0)}>
+                    Reverse
+                </button>
+            </div>
+        </div>
+    )
+}
 export default function Dashboard() {
 
     const queryClient = useQueryClient()
@@ -80,6 +114,13 @@ export default function Dashboard() {
     useEffect(() => {
         api.methods.twist(twist).then(setTwistResponse)
     },[twist])
+
+    const handleControlClick = (x: number, y: number, z: number) => {
+        setTwist({
+            linear: {x: x*SPEED, y: y*SPEED, z: 0},
+            angular: {x: 0, y: 0, z: z*SPEED}
+        })
+    }
 
     const handleMove1 = (e: IJoystickUpdateEvent) => {
 
@@ -126,14 +167,15 @@ export default function Dashboard() {
                     height="480px"
                 />
 
-
-            <Joystick  size={DRIVE_MODE > 0 ? 100 : 150} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleMove1} minDistance={10} />
-
             <div className="text-white flex flex-row w-full justify-center">
                 <div className="flex flex-row gap-2">
                     <div>Linear: ({twistResponse?.linear?.x}, {twistResponse?.linear?.y})</div>
                     <div>Angular: {twistResponse?.angular?.z}</div>
                 </div>
+            </div>
+            <div className="flex flex-row gap-12 items-center">
+                <ControlPanel onClick={handleControlClick}/>
+                <Joystick  size={DRIVE_MODE > 0 ? 100 : 150} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleMove1} minDistance={10} />
             </div>
 
         </div>
@@ -142,3 +184,9 @@ export default function Dashboard() {
 
     )
 }
+
+/*
+
+
+
+ */
