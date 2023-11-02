@@ -56,7 +56,8 @@ export default function Dashboard() {
     const queryClient = useQueryClient()
     const [twist, setTwist] = useState<Twist>(TWIST_ZERO)
     const [twistResponse, setTwistResponse] = useState<Twist>(TWIST_ZERO)
-    const [capture, setCapture] = useState(true)
+    const [capture, setCapture] = useState(false)
+    const [autodrive, setAutodrive] = useState(false)
 
 
     const {
@@ -71,6 +72,11 @@ export default function Dashboard() {
     },[twist])
 
     const not_zero = (a?: number, b?: number): boolean => (((a || 0) !== 0) && ((b || 0) !== 0))
+
+    const handleAutodrive = () => {
+        setAutodrive(false)
+        api.methods.autodrive().then((e) => setAutodrive(e.status))
+    }
 
     const handleControlClick = (x: number, y: number, z: number, speed: number) => {
 
@@ -139,6 +145,7 @@ export default function Dashboard() {
                     ))
                     }
                 </div>
+            <div className="text-white">v: ({twistResponse?.linear?.x?.toFixed(2)}, {twistResponse?.linear?.y.toFixed(2)}, {twistResponse?.angular?.z.toFixed(2)})</div>
         </div>
 
             <div className="w-full absolute fixed bottom-6 z-100 flex flex-col gap-4 items-center justify-between">
@@ -146,8 +153,12 @@ export default function Dashboard() {
                 <Joystick   size={100} sticky={false} baseColor="white" stickColor="blue" move={handleJoy} stop={handleJoy} minDistance={5} />
                 <ControlPanel onClick={handleControlClick}/>
                 <div className="text-white flex flex-row justify-center gap-4 items-center text-xs">
-                    <div>v: ({twistResponse?.linear?.x},{twistResponse?.linear?.y},{twistResponse?.angular?.z})</div>
-                    <button className={`font-bold text-xs rounded-md py-2 px-4 ${capture ? "bg-green-500" : "bg-red-600"}`} onClick={() => setCapture(!capture)}>{`Capture is: ${capture ? "ON" : "OFF"}`}</button>
+                    <button className={`toggle-button ${autodrive ? "bg-green-500" : "bg-red-600"}`} onClick={handleAutodrive}>
+                        {`Autodrive is: ${autodrive ? "ON" : "OFF"}`}
+                    </button>
+                    <button className={`toggle-button ${capture ? "bg-green-500" : "bg-red-600"}`} onClick={() => setCapture(!capture)}>
+                        {`Capture is: ${capture ? "ON" : "OFF"}`}
+                    </button>
                 </div>
             </div>
 

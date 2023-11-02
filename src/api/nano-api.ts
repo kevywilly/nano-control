@@ -34,8 +34,8 @@ export interface CalibrationCounts {
     count?: number
 }
 
-export interface AutoDriveResponse {
-    autodrive: boolean
+export interface StatusResponse {
+    status: boolean
 }
 async function drive(cmd: string, speed: number = 25) {
     const {data} = await axios.get(DRIVE_PATH(cmd, speed))
@@ -52,7 +52,7 @@ async function collect_image(category: string){
     return data
 }
 
-async function autodrive(): Promise<AutoDriveResponse>{
+async function autodrive(): Promise<StatusResponse>{
     const {data} = await axios.get(AUTODRIVE_PATH)
     return data
 }
