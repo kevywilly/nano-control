@@ -4,6 +4,9 @@ import {useQuery, useQueryClient} from "react-query";
 import {Joystick} from 'react-joystick-component';
 import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
 
+const DEFAULT_DRIVE_POWER = 0.5
+const DEFAULT_TURN_POWER = 0.25
+
 const CategoryButton = (props: {category: CategoryCount, onClick: (category: CategoryCount) => void}) => {
 
     const {category, onClick} = props
@@ -24,12 +27,12 @@ const ControlPanel = (props : {onClick: (x: number, y: number, z: number, speed:
     return (
         <div className="grid grid-cols-3 text-white font-bold gap-2 w-full">
             <div className="col-span-full text-center">
-                <button className="control-button bg-green-800" onClick={() => onClick(1.0, 0.0, 0.0, 0.3)}>
+                <button className="control-button bg-green-800" onClick={() => onClick(1.0, 0.0, 0.0, DEFAULT_DRIVE_POWER)}>
                     Forward
                 </button>
             </div>
             <div className="col-span-1">
-                <button className="control-button bg-orange-800" onClick={() => onClick(0.0, 0.0, 1.0, 0.2)}>
+                <button className="control-button bg-orange-800" onClick={() => onClick(0.0, 0.0, 1.0, DEFAULT_TURN_POWER)}>
                     Left
                 </button>
             </div>
@@ -39,12 +42,12 @@ const ControlPanel = (props : {onClick: (x: number, y: number, z: number, speed:
                 </button>
             </div>
             <div className="col-span-1">
-                <button className="control-button bg-orange-800" onClick={() => onClick(0.0, 0.0, -1.0, 0.2)}>
+                <button className="control-button bg-orange-800" onClick={() => onClick(0.0, 0.0, -1.0, DEFAULT_TURN_POWER)}>
                     Right
                 </button>
             </div>
             <div className="col-span-full">
-                <button className="control-button bg-yellow-800" onClick={() => onClick(-1.0, 0.0, 0.0, 0.3)}>
+                <button className="control-button bg-yellow-800" onClick={() => onClick(-1.0, 0.0, 0.0, DEFAULT_DRIVE_POWER)}>
                     Reverse
                 </button>
             </div>
