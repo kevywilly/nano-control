@@ -19,14 +19,12 @@ const CategoryButton = (props: {category: CategoryCount, onClick: (category: Cat
         )
 }
 
-const DRIVE_MODE: number = 0
-
 const ControlPanel = (props : {onClick: (x: number, y: number, z: number, speed: number) => void}) => {
     const {onClick} = props
     return (
-        <div className="grid grid-cols-3 text-white font-bold gap-4 w-1/2">
+        <div className="grid grid-cols-3 text-white font-bold gap-2 w-1/2">
             <div className="col-span-full text-center">
-                <button className="bg-green-800 px-2 py-6 rounded-md w-full" onClick={() => onClick(1.0, 0.0, 0.0, 0.3)}>
+                <button className="bg-green-800 px-2 py-5 rounded-md w-full" onClick={() => onClick(1.0, 0.0, 0.0, 0.3)}>
                     Forward
                 </button>
             </div>
@@ -72,11 +70,11 @@ export default function Dashboard() {
         api.methods.twist(twist).then(setTwistResponse)
     },[twist])
 
-    const both_non_zero = (a?: number, b?: number): boolean => (((a || 0) !== 0) && ((b || 0) !== 0))
+    const not_zero = (a?: number, b?: number): boolean => (((a || 0) !== 0) && ((b || 0) !== 0))
 
     const handleControlClick = (x: number, y: number, z: number, speed: number) => {
 
-        if(both_non_zero(x, twist.linear?.x) || both_non_zero(y, twist.linear?.y) || both_non_zero(z, twist.angular?.z)) {
+        if(not_zero(x, twist.linear?.x) || not_zero(y, twist.linear?.y) || not_zero(z, twist.angular?.z)) {
             setTwist(TWIST_ZERO)
             return
         }
@@ -102,28 +100,21 @@ export default function Dashboard() {
         }
     }
 
-    const handleMove1 = (e: IJoystickUpdateEvent) => {
+    const handleJoy = (e: IJoystickUpdateEvent) => {
 
-        let ly: number = 0
-        let az: number  = 0
+        let y: number = 0
+        let z: number = -(e.x || 0)
+        let x: number = (e.y || 0)
 
-        let lx:number = (e.y || 0)
-
-        if(DRIVE_MODE === 0) {
-            ly = 0
-            az = e.x || 0
-            if(Math.abs(az) < Math.abs(lx)) {
-                az = 0
-            } else {
-                lx = 0
-            }
+        if(Math.abs(z) < Math.abs(x)) {
+            z = 0
         } else {
-            ly = e.x || 0
-            az = 0
+            x = 0
         }
+
         setTwist({
-            linear: {x: lx, y: ly, z: 0},
-            angular: {x: 0, y: 0, z: -az}
+            linear: {x: x, y: y, z: 0},
+            angular: {x: 0, y: 0, z: z}
         })
     }
 
@@ -146,18 +137,14 @@ export default function Dashboard() {
                     width="640px"
                     height="480px"
                 />
-
-            <div className="text-white flex flex-row justify-center gap-10 items-center">
-
-                    <div>Linear: ({twistResponse?.linear?.x}, {twistResponse?.linear?.y})</div>
-                    <div>Angular: {twistResponse?.angular?.z}</div>
-                    <button className={`font-bold rounded-md py-2 px-4 ${capture ? "bg-green-500" : "bg-red-600"}`} onClick={() => setCapture(!capture)}>{`Capture is: ${capture ? "ON" : "OFF"}`}</button>
-
+            <div className="text-white flex flex-row justify-center gap-4 items-center text-xs">
+                    <div>v: {twistResponse?.linear?.x},{twistResponse?.linear?.y},{twistResponse?.angular?.z})</div>
+                    <button className={`font-bold text-xs rounded-md py-2 px-4 ${capture ? "bg-green-500" : "bg-red-600"}`} onClick={() => setCapture(!capture)}>{`Capture is: ${capture ? "ON" : "OFF"}`}</button>
             </div>
 
             <div className="flex flex-row gap-4 items-center w-full justify-center">
                 <ControlPanel onClick={handleControlClick}/>
-                <Joystick  size={DRIVE_MODE > 0 ? 100 : 150} sticky={false} baseColor="grey" stickColor="white" move={handleMove1} stop={handleMove1} minDistance={10} />
+                <Joystick  size={80} sticky={false} baseColor="white" stickColor="blue" move={handleJoy} stop={handleJoy} minDistance={5} />
             </div>
 
         </div>
