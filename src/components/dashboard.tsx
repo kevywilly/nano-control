@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {api, CategoryCount, Twist, TWIST_ZERO} from "../api/nano-api";
+import {api, CategoryCount, Velocity, VELOCITY_ZERO} from "../api/nano-api";
 import {useQuery, useQueryClient} from "react-query";
 import {Joystick} from 'react-joystick-component';
 import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
@@ -57,22 +57,21 @@ const ControlPanel = (props : {onClick: (x: number, y: number, z: number, speed:
 export default function Dashboard() {
 
     const queryClient = useQueryClient()
-    const [twist, setTwist] = useState<Twist>(TWIST_ZERO)
-    const [twistResponse, setTwistResponse] = useState<Twist>(TWIST_ZERO)
+    const [velocity, setVelocity] = useState<Velocity>(VELOCITY_ZERO)
+    const [velocityResponse, setVelocityResponse] = useState<Velocity>(VELOCITY_ZERO)
     const [capture, setCapture] = useState(false)
     const [autodrive, setAutodrive] = useState(false)
-
 
     const {
         data: categories
     } = useQuery<CategoryCount[], Error>(
         ['categories'],
-        () => api.methods.getCategoryCounts()
+        () => api.methods.getCategoryCounts().catch(() => [])
     )
 
     useEffect(() => {
-        api.methods.twist(twist).then(setTwistResponse)
-    },[twist])
+        api.methods.drive(velocity).then(setVelocityResponse)
+    },[velocity])
 
     const not_zero = (a?: number, b?: number): boolean => (((a || 0) !== 0) && ((b || 0) !== 0))
 
@@ -83,16 +82,15 @@ export default function Dashboard() {
 
     const handleControlClick = (x: number, y: number, z: number, speed: number) => {
 
-        if(not_zero(x, twist.linear?.x) || not_zero(y, twist.linear?.y) || not_zero(z, twist.angular?.z)) {
-            setTwist(TWIST_ZERO)
+        return 
+        if(not_zero(x, velocity.x) || not_zero(y, velocity.y) || not_zero(z,velocity.z)) {
+            setVelocity(VELOCITY_ZERO)
             return
         }
 
-        setTwist({
-            linear: {x: x*speed, y: y*speed, z: 0},
-            angular: {x: 0, y: 0, z: z*speed}
-        })
+        setVelocity({x: x*speed, y: y*speed, z: z*speed})
 
+        /*
         let cat: string | undefined = undefined
 
         if(capture) {
@@ -107,24 +105,24 @@ export default function Dashboard() {
         if(cat) {
             api.methods.collect_image(cat).then(() => queryClient.invalidateQueries("categories"))
         }
+        */
     }
 
     const handleJoy = (e: IJoystickUpdateEvent) => {
 
-        let y: number = 0
-        let z: number = -(e.x || 0)
-        let x: number = (e.y || 0)
+        let y: number = e.x || 0
+        let x: number = e.y || 0
+        let z: number = 0
 
-        if(Math.abs(z) < Math.abs(x)) {
-            z = 0
-        } else {
-            x = 0
-        }
+        setVelocity({x,y,z})
+        
+    }
 
-        setTwist({
-            linear: {x: x, y: y, z: 0},
-            angular: {x: 0, y: 0, z: z}
-        })
+    const handleJoy2 = (e: IJoystickUpdateEvent) => {
+
+        return
+
+        
     }
 
     const handleCategoryClick = (category: CategoryCount) =>
@@ -148,13 +146,15 @@ export default function Dashboard() {
                     ))
                     }
                 </div>
-            <div className="text-white">v: ({twistResponse?.linear?.x?.toFixed(2)}, {twistResponse?.linear?.y.toFixed(2)}, {twistResponse?.angular?.z.toFixed(2)})</div>
+            <div className="text-white">v: ({velocityResponse?.x.toFixed(2)}, {velocityResponse?.y.toFixed(2)}, {velocityResponse?.z.toFixed(2)})</div>
         </div>
 
             <div className="w-full absolute fixed bottom-6 z-100 flex flex-col gap-4 items-center justify-between">
 
-                <Joystick   size={100} sticky={false} baseColor="white" stickColor="blue" move={handleJoy} stop={handleJoy} minDistance={5} />
-                <ControlPanel onClick={handleControlClick}/>
+                <div className="flex flex-row gap-16">
+                <Joystick size={120} sticky={false} baseColor="white" stickColor="blue" move={handleJoy} stop={handleJoy} minDistance={5} />
+                <Joystick size={120} sticky={false} baseColor="white" stickColor="blue" move={handleJoy2} stop={handleJoy2} minDistance={5} />
+                </div>
                 <div className="text-white flex flex-row justify-center gap-4 items-center text-xs">
                     <button className={`toggle-button ${autodrive ? "bg-green-500" : "bg-red-600"}`} onClick={handleAutodrive}>
                         {`Autodrive is: ${autodrive ? "ON" : "OFF"}`}
