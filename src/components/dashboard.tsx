@@ -25,8 +25,6 @@ export default function Dashboard() {
     const queryClient = useQueryClient()
     const [velocity, setVelocity] = useState<Velocity>(VELOCITY_ZERO)
     const [velocityResponse, setVelocityResponse] = useState<Velocity>(VELOCITY_ZERO)
-    const [capture, setCapture] = useState(false)
-    const [autodrive, setAutodrive] = useState(false)
 
     const {
         data: categories
@@ -39,31 +37,46 @@ export default function Dashboard() {
         api.methods.drive(velocity).then(setVelocityResponse)
     },[velocity])
 
-    const handleAutodrive = () => {
-        setAutodrive(false)
-        api.methods.autodrive().then((e) => setAutodrive(e.status))
-    }
+    const handleJoy = (e: IJoystickUpdateEvent, turn?: boolean) => {
+        console.log(e)
+        let x: number = 0
+        let y: number=0
+        let z:number=0
 
-    const handleJoy = (e: IJoystickUpdateEvent) => {
-
-        let x: number = (e.y || 0)*0.5
-        let y: number = -(e.x || 0)*0.5
-        let z: number = 0
-
-        if(Math.abs(y) < .25) {
-            y = 0;
+        if(e.type === "stop") {
+            setVelocity({x,y,z})
+            return
         }
+
+        const vel = (e.distance || 0) / 100.0
+
+        switch (e.direction) {
+            case "FORWARD":
+                if(!turn)
+                    x = vel * 0.5
+                break
+            case "BACKWARD":
+                if(!turn)
+                    x = -vel * 0.5
+                break
+            case "RIGHT":
+                if(!turn) {
+                    y = -vel * 0.5
+                }
+                else {
+                    z = -vel * 2.5
+                }
+                break
+            case "LEFT":
+                if(!turn) {
+                    y = vel * 0.5
+                }
+                else {
+                    z = vel * 2.5
+                }
+        }
+
         setVelocity({x,y,z})
-    }
-
-    const handleJoy2 = (e: IJoystickUpdateEvent) => {
-        const x = 0
-        const y = 0
-        const z = -(e.x || 0)*2.0
-
-        setVelocity({x,y,z})
-
-        
     }
 
     const handleCategoryClick = (category: CategoryCount) =>
@@ -73,14 +86,14 @@ export default function Dashboard() {
         <div>
             <div className="w-full absolute fixed top-0 -z-10 flex flex-row gap-2">
                 <img
-                    className="rounded-lg w-1/2 aspect-square sm:aspect-video"
+                    className="rounded-lg w-1/2 aspect-square"
                     src={`${api.routes.stream_url(1)}`}
                     alt="Jetson Rover Stream 3d"
                     content="multipart/x-mixed-replace; boundary=frame"
 
                 />
                 <img
-                    className="rounded-lg w-1/2 aspect-square sm:aspect-video"
+                    className="rounded-lg w-1/2 "
                     src={`${api.routes.stream_url(0)}`}
                     alt="Jetson Rover Stream 3d"
                     content="multipart/x-mixed-replace; boundary=frame"
@@ -94,23 +107,16 @@ export default function Dashboard() {
                     ))
                     }
                 </div>
-            <div className="text-white">v: ({velocityResponse?.x.toFixed(2)}, {velocityResponse?.y.toFixed(2)}, {velocityResponse?.z.toFixed(2)})</div>
+            <div className="bg-black opacity-50 rounded-md p-4 text-white font-bold text-xl">v: ({((velocityResponse?.x || 0)*100).toFixed(0)}, {((velocityResponse?.y || 0)*100).toFixed(0)}, {((velocityResponse?.z || 0)*100).toFixed(0)})</div>
         </div>
 
             <div className="w-full absolute fixed bottom-6 z-100 flex flex-col gap-4 items-center justify-between">
 
                 <div className="flex flex-row gap-16">
-                <Joystick size={120} sticky={false} baseColor="white" stickColor="blue" move={handleJoy} stop={handleJoy} minDistance={20} />
-                <Joystick size={120} sticky={false} baseColor="white" stickColor="blue" move={handleJoy2} stop={handleJoy2} minDistance={20} />
+                <Joystick size={120} sticky={false} baseColor="white" stickColor="green" move={handleJoy} stop={handleJoy} minDistance={5} />
+                <Joystick size={120} sticky={false} baseColor="white" stickColor="orange" move={(e) => handleJoy(e, true)} stop={(e) => handleJoy(e, true)} minDistance={5} />
                 </div>
-                <div className="text-white flex flex-row justify-center gap-4 items-center text-xs">
-                    <button className={`toggle-button ${autodrive ? "bg-green-500" : "bg-red-600"}`} onClick={handleAutodrive}>
-                        {`Autodrive is: ${autodrive ? "ON" : "OFF"}`}
-                    </button>
-                    <button className={`toggle-button ${capture ? "bg-green-500" : "bg-red-600"}`} onClick={() => setCapture(!capture)}>
-                        {`Capture is: ${capture ? "ON" : "OFF"}`}
-                    </button>
-                </div>
+
             </div>
 
         </div>
