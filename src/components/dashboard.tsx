@@ -74,17 +74,16 @@ export default function Dashboard() {
             <div className="w-full absolute fixed top-0 -z-10 flex flex-row gap-2">
                 <img
                     className="rounded-lg w-1/2 aspect-square sm:aspect-video"
-                    src={`${api.routes.stream_url(0)}`}
+                    src={`${api.routes.stream_url(1)}`}
                     alt="Jetson Rover Stream 3d"
                     content="multipart/x-mixed-replace; boundary=frame"
 
                 />
                 <img
                     className="rounded-lg w-1/2 aspect-square sm:aspect-video"
-                    src={`${api.routes.stream_url(1)}`}
+                    src={`${api.routes.stream_url(0)}`}
                     alt="Jetson Rover Stream 3d"
                     content="multipart/x-mixed-replace; boundary=frame"
-
                 />
             </div>
 
