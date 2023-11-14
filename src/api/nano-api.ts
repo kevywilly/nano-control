@@ -3,7 +3,7 @@ export const API_PATH = process.env.REACT_APP_API_PATH
     //is_prod() ? process.env.REACT_APP_API_PROD : process.env.REACT_APP_API_DEV
 
 const AUTODRIVE_PATH = `${API_PATH}/autodrive`
-const STREAMING_PATH = `${API_PATH}/stream`
+const STREAMING_PATH = (cam_index: number) => `${API_PATH}/stream/${cam_index}`
 const CATEGORIES_PATH = `${API_PATH}/categories`
 const CALIBRATION_PATH = `${API_PATH}/calibration`
 const CATEGORY_PATH = (category: string) => `${API_PATH}/categories/${category}`

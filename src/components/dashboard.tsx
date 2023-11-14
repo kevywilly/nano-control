@@ -71,15 +71,23 @@ export default function Dashboard() {
 
     return (
         <div>
-            <div className=" w-full absolute fixed top-0 -z-10">
+            <div className="w-full absolute fixed top-0 -z-10 flex flex-row gap-2">
                 <img
-                    className="rounded-lg w-full aspect-square sm:aspect-video"
-                    src={`${api.routes.stream_url}`}
+                    className="rounded-lg w-1/2 aspect-square sm:aspect-video"
+                    src={`${api.routes.stream_url(0)}`}
+                    alt="Jetson Rover Stream 3d"
+                    content="multipart/x-mixed-replace; boundary=frame"
+
+                />
+                <img
+                    className="rounded-lg w-1/2 aspect-square sm:aspect-video"
+                    src={`${api.routes.stream_url(1)}`}
                     alt="Jetson Rover Stream 3d"
                     content="multipart/x-mixed-replace; boundary=frame"
 
                 />
             </div>
+
         <div className="flex flex-col items-center gap-4 mt-10 z-100">
                 <div className="flex flex-row gap-2 justify-between w-full">
                     { categories && categories.map((k) => (
