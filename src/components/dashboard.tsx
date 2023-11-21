@@ -53,26 +53,26 @@ export default function Dashboard() {
         switch (e.direction) {
             case "FORWARD":
                 if(!turn)
-                    x = vel * 0.5
+                    x = vel
                 break
             case "BACKWARD":
                 if(!turn)
-                    x = -vel * 0.5
+                    x = -vel
                 break
             case "RIGHT":
                 if(!turn) {
-                    y = -vel * 0.5
+                    y = -vel
                 }
                 else {
-                    z = -vel * 2.5
+                    z = -vel
                 }
                 break
             case "LEFT":
                 if(!turn) {
-                    y = vel * 0.5
+                    y = vel
                 }
                 else {
-                    z = vel * 2.5
+                    z = vel
                 }
         }
 
