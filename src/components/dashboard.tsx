@@ -19,6 +19,7 @@ const CategoryButton = (props: {category: CategoryCount, onClick: (category: Cat
         )
 }
 
+const num_cams: number = 1
 
 export default function Dashboard() {
 
@@ -37,8 +38,11 @@ export default function Dashboard() {
         api.methods.drive(velocity).then(setVelocityResponse)
     },[velocity])
 
+    const handleStop = () => {
+        setVelocity({x: 0.0, y:0.0, z:0.0})
+    }
     const handleJoy = (e: IJoystickUpdateEvent, turn?: boolean) => {
-        console.log(e)
+
         let x: number = 0
         let y: number=0
         let z:number=0
@@ -76,7 +80,9 @@ export default function Dashboard() {
                 }
         }
 
-        setVelocity({x,y,z})
+        if(velocity.x !== x || velocity.y !== y || velocity.z !== z ) {
+            setVelocity({x, y, z})
+        }
     }
 
     const handleCategoryClick = (category: CategoryCount) =>
@@ -84,21 +90,35 @@ export default function Dashboard() {
 
     return (
         <div>
-            <div className="w-full absolute fixed top-0 -z-10 flex flex-row gap-2">
-                <img
-                    className="rounded-lg w-1/2 aspect-square"
-                    src={`${api.routes.stream_url(1)}`}
-                    alt="Jetson Rover Stream 3d"
-                    content="multipart/x-mixed-replace; boundary=frame"
 
-                />
-                <img
-                    className="rounded-lg w-1/2 "
-                    src={`${api.routes.stream_url(0)}`}
-                    alt="Jetson Rover Stream 3d"
-                    content="multipart/x-mixed-replace; boundary=frame"
-                />
-            </div>
+                { num_cams > 1 ?
+                    <div className="w-full absolute fixed top-0 -z-10 flex flex-row gap-2">
+                        <img
+                            className="rounded-lg w-1/2 aspect-square"
+                            src={`${api.routes.stream_url(1)}`}
+                            alt="Jetson Rover Stream 3d"
+                            content="multipart/x-mixed-replace; boundary=frame"
+
+                        />
+                        <img
+                        className="rounded-lg w-1/2 "
+                        src={`${api.routes.stream_url(0)}`}
+                        alt="Jetson Rover Stream 3d"
+                        content="multipart/x-mixed-replace; boundary=frame"
+                        />
+                    </div> :
+                    <div className="w-full absolute fixed top-0 -z-10 flex flex-row gap-2">
+
+                        <img
+                            className="rounded-lg w-full "
+                            src={`${api.routes.stream_url(0)}`}
+                            alt="Jetson Rover Stream 3d"
+                            content="multipart/x-mixed-replace; boundary=frame"
+                        />
+                    </div>
+                }
+
+
 
         <div className="flex flex-col items-center gap-4 mt-10 z-100">
                 <div className="flex flex-row gap-2 justify-between w-full">
@@ -113,8 +133,8 @@ export default function Dashboard() {
             <div className="w-full absolute fixed bottom-6 z-100 flex flex-col gap-4 items-center justify-between">
 
                 <div className="flex flex-row gap-16">
-                <Joystick size={120} sticky={false} baseColor="white" stickColor="green" move={handleJoy} stop={handleJoy} minDistance={5} />
-                <Joystick size={120} sticky={false} baseColor="white" stickColor="orange" move={(e) => handleJoy(e, true)} stop={(e) => handleJoy(e, true)} minDistance={5} />
+                <Joystick size={120} sticky={false} baseColor="white" stickColor="green" move={handleJoy} stop={handleStop} minDistance={5} />
+                <Joystick size={120} sticky={false} baseColor="white" stickColor="orange" move={(e) => handleJoy(e, true)} stop={handleStop} minDistance={5} />
                 </div>
 
             </div>
