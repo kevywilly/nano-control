@@ -4,8 +4,8 @@ import {useQuery, useQueryClient} from "react-query";
 import {Joystick} from 'react-joystick-component';
 import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
 
-const DEFAULT_DRIVE_POWER = 0.32
-const DEFAULT_TURN_POWER = 0.16
+const DEFAULT_DRIVE_POWER = 0.25
+const DEFAULT_TURN_POWER = 0.15
 
 const CategoryButton = (props: {category: CategoryCount, onClick: (category: CategoryCount) => void}) => {
 
@@ -112,15 +112,36 @@ export default function Dashboard() {
     const handleJoy = (e: IJoystickUpdateEvent) => {
 
         let y: number = 0
-        let z: number = -(e.x || 0)
-        let x: number = (e.y || 0)
+        let z: number = 0
+        let x: number = 0
 
+
+        x = (e.y || 0)*DEFAULT_DRIVE_POWER
+        z = -(e.x || 0)*DEFAULT_TURN_POWER
+
+        /*
+        switch(e.direction) {
+            case "FORWARD":
+                x = vel;
+                break
+            case "BACKWARD":
+                x = -vel;
+                break
+            case "LEFT":
+                z = vel;
+                break
+            case "RIGHT":
+                z = -vel;
+                break
+        }
+        */
+        /*
         if(Math.abs(z) < Math.abs(x)) {
             z = 0
         } else {
             x = 0
         }
-
+        */
         setTwist({
             linear: {x: x, y: y, z: 0},
             angular: {x: 0, y: 0, z: z}
