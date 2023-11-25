@@ -20,6 +20,7 @@ const CategoryButton = (props: {category: CategoryCount, onClick: (category: Cat
 }
 
 const num_cams: number = 1
+const turn_sensitivity: number = 0.5
 
 export default function Dashboard() {
 
@@ -55,32 +56,25 @@ export default function Dashboard() {
 
         const vel = (e.distance || 0) / 100.0
 
-        switch (e.direction) {
-            case "FORWARD":
-                if(!turn)
-                    x = vel
-                break
-            case "BACKWARD":
-                if(!turn)
-                    x = -vel
-                break
-            case "RIGHT":
-                if(!turn) {
-                    y = -vel
-                }
-                else {
-                    z = -vel
-                }
-                break
-            case "LEFT":
-                if(!turn) {
-                    y = vel
-                }
-                else {
-                    z = vel
-                }
+        if(turn) {
+            x = (e.y || 0)
+            z = -(e.x || 0)*turn_sensitivity
         }
-
+        else {
+            switch (e.direction) {
+                case "FORWARD":
+                     x = vel
+                    break
+                case "BACKWARD":
+                    x = -vel
+                    break
+                case "RIGHT":
+                    y = -vel
+                    break
+                case "LEFT":
+                    y = vel
+            }
+        }
         if(velocity.x !== x || velocity.y !== y || velocity.z !== z ) {
             setVelocity({x, y, z})
         }
