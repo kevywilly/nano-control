@@ -4,8 +4,8 @@ import {useQuery, useQueryClient} from "react-query";
 import {Joystick} from 'react-joystick-component';
 import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
 
-const DEFAULT_DRIVE_POWER = 0.25
-const DEFAULT_TURN_POWER = 0.15
+const DEFAULT_DRIVE_POWER = 0.75
+const DEFAULT_TURN_POWER = 0.3
 
 const CategoryButton = (props: {category: CategoryCount, onClick: (category: CategoryCount) => void}) => {
 
