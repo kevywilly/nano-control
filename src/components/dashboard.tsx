@@ -142,8 +142,9 @@ export default function Dashboard() {
             <div className="w-full absolute fixed bottom-6 z-100 flex flex-col gap-4 items-center justify-between">
 
                 <div className="flex flex-row gap-16">
-                <Joystick size={120} sticky={false} baseColor="white" stickColor="green" move={handleJoy} stop={handleStop} minDistance={5} />
-                <Joystick size={120} sticky={false} baseColor="white" stickColor="orange" move={(e) => handleJoy(e, true)} stop={handleStop} minDistance={5} />
+                    <Joystick size={120} sticky={false} baseColor="white" stickColor="green" move={handleJoy} stop={handleStop} minDistance={5} />
+                    <button onClick={handleStop} className="button bg-red-400 text-white">Stop</button>
+                    <Joystick size={120} sticky={false} baseColor="white" stickColor="orange" move={(e) => handleJoy(e, true)} stop={handleStop} minDistance={5} />
                 </div>
 
             </div>
