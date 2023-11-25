@@ -42,7 +42,12 @@ async function collect_image(category: string){
     return data
 }
 
-async function autodrive(): Promise<StatusResponse>{
+async function toggle_autodrive(): Promise<StatusResponse>{
+    const {data} = await axios.post(AUTODRIVE_PATH)
+    return data
+}
+
+async function get_autodrive(): Promise<StatusResponse>{
     const {data} = await axios.get(AUTODRIVE_PATH)
     return data
 }
@@ -112,7 +117,8 @@ export const api = {
     },
     methods: {
         drive,
-        autodrive,
+        toggle_autodrive,
+        get_autodrive,
         collect_image,
         getCategories,
         getCategoryCounts,

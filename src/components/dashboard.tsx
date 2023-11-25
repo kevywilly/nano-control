@@ -26,6 +26,7 @@ export default function Dashboard() {
     const queryClient = useQueryClient()
     const [velocity, setVelocity] = useState<Velocity>(VELOCITY_ZERO)
     const [velocityResponse, setVelocityResponse] = useState<Velocity>(VELOCITY_ZERO)
+    const [autodrive, setAutodrive] = useState(false)
 
     const {
         data: categories
@@ -85,12 +86,15 @@ export default function Dashboard() {
         }
     }
 
+    const handleAutodrive = () => {
+        api.methods.toggle_autodrive().then((r) => setAutodrive(r.status))
+    }
+    
     const handleCategoryClick = (category: CategoryCount) =>
         api.methods.collect_image(category.name).then(() => queryClient.invalidateQueries("categories"))
 
     return (
         <div>
-
                 { num_cams > 1 ?
                     <div className="w-full absolute fixed top-0 -z-10 flex flex-row gap-2">
                         <img
@@ -118,16 +122,21 @@ export default function Dashboard() {
                     </div>
                 }
 
-
-
-        <div className="flex flex-col items-center gap-4 mt-10 z-100">
+        <div className="flex flex-row justify-between gap-4 mt-10 z-100">
                 <div className="flex flex-row gap-2 justify-between w-full">
                     { categories && categories.map((k) => (
                         <CategoryButton key={k.name} category={k} onClick={handleCategoryClick}/>
                     ))
                     }
                 </div>
-            <div className="bg-black opacity-50 rounded-md p-4 text-white font-bold text-xl">v: ({((velocityResponse?.x || 0)*100).toFixed(0)}, {((velocityResponse?.y || 0)*100).toFixed(0)}, {((velocityResponse?.z || 0)*100).toFixed(0)})</div>
+            <div className=" p-4 text-white font-bold text-base">
+                <span className="whitespace-nowrap">
+                    v: ({((velocityResponse?.x || 0)*100).toFixed(0)}, {((velocityResponse?.y || 0)*100).toFixed(0)}, {((velocityResponse?.z || 0)*100).toFixed(0)})
+                </span>
+            </div>
+            <div className="rounded-md p-4 text-white font-bold text-base">
+                <button className="toggle-button" onClick={handleAutodrive}>Autodrive Is {autodrive ? "ON" : "OFF"}</button>
+            </div>
         </div>
 
             <div className="w-full absolute fixed bottom-6 z-100 flex flex-col gap-4 items-center justify-between">
