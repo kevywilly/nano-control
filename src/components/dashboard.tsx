@@ -4,8 +4,10 @@ import {useQuery, useQueryClient} from "react-query";
 import {Joystick} from 'react-joystick-component';
 import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
 
-const DEFAULT_DRIVE_POWER = 0.75
-const DEFAULT_TURN_POWER = 0.3
+const DEFAULT_DRIVE_POWER = 0.5
+const DEFAULT_TURN_POWER = 0.5
+const drive_sensitivity = 0.5
+const turn_sensitivity = 0.4
 
 const CategoryButton = (props: {category: CategoryCount, onClick: (category: CategoryCount) => void}) => {
 
@@ -89,8 +91,8 @@ export default function Dashboard() {
         }
 
         setTwist({
-            linear: {x: x*speed, y: y*speed, z: 0},
-            angular: {x: 0, y: 0, z: z*speed}
+            linear: {x: x*speed*drive_sensitivity, y: y*speed*drive_sensitivity, z: 0},
+            angular: {x: 0, y: 0, z: z*speed*turn_sensitivity}
         })
 
         let cat: string | undefined = undefined
@@ -116,8 +118,8 @@ export default function Dashboard() {
         let x: number = 0
 
 
-        x = (e.y || 0)*DEFAULT_DRIVE_POWER
-        z = -(e.x || 0)*DEFAULT_TURN_POWER
+        x = (e.y || 0)*drive_sensitivity
+        z = -(e.x || 0)*turn_sensitivity
 
         /*
         switch(e.direction) {
