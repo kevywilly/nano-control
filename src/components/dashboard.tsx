@@ -111,43 +111,44 @@ export default function Dashboard() {
         }
     }
 
-    const handleJoy = (e: IJoystickUpdateEvent) => {
+    const handleStop = () => {
+        setTwist(TWIST_ZERO)
+    }
+    const handleJoy = (e: IJoystickUpdateEvent, turn?: boolean) => {
 
-        let y: number = 0
-        let z: number = 0
         let x: number = 0
+        let y: number=0
+        let z:number=0
 
-
-        x = (e.y || 0)*drive_sensitivity
-        z = -(e.x || 0)*turn_sensitivity
-
-        /*
-        switch(e.direction) {
-            case "FORWARD":
-                x = vel;
-                break
-            case "BACKWARD":
-                x = -vel;
-                break
-            case "LEFT":
-                z = vel;
-                break
-            case "RIGHT":
-                z = -vel;
-                break
+        if(e.type === "stop") {
+            handleStop()
+            return
         }
-        */
-        /*
-        if(Math.abs(z) < Math.abs(x)) {
-            z = 0
-        } else {
-            x = 0
+
+        const vel = (e.distance || 0) / 100.0
+
+        if(turn) {
+            x = (e.y || 0)
+            z = -(e.x || 0)*turn_sensitivity
         }
-        */
-        setTwist({
-            linear: {x: x, y: y, z: 0},
-            angular: {x: 0, y: 0, z: z}
-        })
+        else {
+            switch (e.direction) {
+                case "FORWARD":
+                    x = vel
+                    break
+                case "BACKWARD":
+                    x = -vel
+                    break
+                case "RIGHT":
+                    y = -vel
+                    break
+                case "LEFT":
+                    y = vel
+            }
+        }
+
+        setTwist({linear: {x,y,z:0}, angular:{x:0, y:0, z}})
+
     }
 
     const handleCategoryClick = (category: CategoryCount) =>
@@ -175,8 +176,11 @@ export default function Dashboard() {
         </div>
 
             <div className="w-full absolute fixed bottom-6 z-100 flex flex-col gap-4 items-center justify-between">
-
-                <Joystick   size={100} sticky={false} baseColor="white" stickColor="blue" move={handleJoy} stop={handleJoy} minDistance={5} />
+                <div className="text-white flex flex-row justify-center gap-4 items-center text-xs">
+                <Joystick size={120} sticky={false} baseColor="white" stickColor="green" move={handleJoy} stop={handleStop} minDistance={5} />
+                <button onClick={handleStop} className="button bg-red-400 text-white">Stop</button>
+                <Joystick size={120} sticky={false} baseColor="white" stickColor="orange" move={(e) => handleJoy(e, true)} stop={handleStop} minDistance={5} />
+                </div>
                 <ControlPanel onClick={handleControlClick}/>
                 <div className="text-white flex flex-row justify-center gap-4 items-center text-xs">
                     <button className={`toggle-button ${autodrive ? "bg-green-500" : "bg-red-600"}`} onClick={handleAutodrive}>
