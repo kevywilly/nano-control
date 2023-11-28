@@ -181,7 +181,7 @@ export default function Dashboard() {
                 <button onClick={handleStop} className="button bg-red-400 text-white">Stop</button>
                 <Joystick size={120} sticky={false} baseColor="white" stickColor="orange" move={(e) => handleJoy(e, true)} stop={handleStop} minDistance={5} />
                 </div>
-                <ControlPanel onClick={handleControlClick}/>
+
                 <div className="text-white flex flex-row justify-center gap-4 items-center text-xs">
                     <button className={`toggle-button ${autodrive ? "bg-green-500" : "bg-red-600"}`} onClick={handleAutodrive}>
                         {`Autodrive is: ${autodrive ? "ON" : "OFF"}`}
