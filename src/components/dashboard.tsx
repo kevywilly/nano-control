@@ -4,10 +4,9 @@ import {useQuery, useQueryClient} from "react-query";
 import {Joystick} from 'react-joystick-component';
 import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
 
-const DEFAULT_DRIVE_POWER = 0.5
-const DEFAULT_TURN_POWER = 0.5
-const drive_sensitivity = 0.5
-const turn_sensitivity = 0.4
+
+const drive_sensitivity = .75
+const turn_sensitivity = .2
 
 const CategoryButton = (props: {category: CategoryCount, onClick: (category: CategoryCount) => void}) => {
 
@@ -23,7 +22,9 @@ const CategoryButton = (props: {category: CategoryCount, onClick: (category: Cat
             </div>
         )
 }
-
+/*
+const DEFAULT_DRIVE_POWER = 1
+const DEFAULT_TURN_POWER = 1
 const ControlPanel = (props : {onClick: (x: number, y: number, z: number, speed: number) => void}) => {
     const {onClick} = props
     return (
@@ -56,6 +57,8 @@ const ControlPanel = (props : {onClick: (x: number, y: number, z: number, speed:
         </div>
     )
 }
+
+ */
 export default function Dashboard() {
 
     const queryClient = useQueryClient()
@@ -76,13 +79,16 @@ export default function Dashboard() {
         api.methods.twist(twist).then(setTwistResponse)
     },[twist])
 
+    /*
     const not_zero = (a?: number, b?: number): boolean => (((a || 0) !== 0) && ((b || 0) !== 0))
+
+     */
 
     const handleAutodrive = () => {
         setAutodrive(false)
         api.methods.autodrive().then((e) => setAutodrive(e.status))
     }
-
+    /*
     const handleControlClick = (x: number, y: number, z: number, speed: number) => {
 
         if(not_zero(x, twist.linear?.x) || not_zero(y, twist.linear?.y) || not_zero(z, twist.angular?.z)) {
@@ -111,6 +117,8 @@ export default function Dashboard() {
         }
     }
 
+     */
+
     const handleStop = () => {
         setTwist(TWIST_ZERO)
     }
@@ -125,12 +133,20 @@ export default function Dashboard() {
             return
         }
 
-        const vel = (e.distance || 0) / 100.0
+        //const vel = (e.distance || 0) / 100.0
 
         if(turn) {
             x = (e.y || 0)
-            z = -(e.x || 0)*turn_sensitivity
+            z = -(e.x || 0)
+        } else {
+            x = (e.y || 0)
+            y = -(e.x || 0)
         }
+
+        x = x*drive_sensitivity;
+        y = y*drive_sensitivity;
+        z = z*turn_sensitivity;
+        /*
         else {
             switch (e.direction) {
                 case "FORWARD":
@@ -146,7 +162,7 @@ export default function Dashboard() {
                     y = vel
             }
         }
-
+        */
         setTwist({linear: {x,y,z:0}, angular:{x:0, y:0, z}})
 
     }
