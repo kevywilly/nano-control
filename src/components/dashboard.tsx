@@ -140,7 +140,7 @@ export default function Dashboard() {
             z = -(e.x || 0)
         } else {
             x = (e.y || 0)
-            y = -(e.x || 0)
+            y = (e.x || 0)
         }
 
         x = x*drive_sensitivity;
