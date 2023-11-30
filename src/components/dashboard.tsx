@@ -5,8 +5,8 @@ import {Joystick} from 'react-joystick-component';
 import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
 
 
-const drive_sensitivity = .7
-const turn_sensitivity = .1
+const drive_sensitivity = .6
+const turn_sensitivity = .2
 
 const CategoryButton = (props: {category: CategoryCount, onClick: (category: CategoryCount) => void}) => {
 
