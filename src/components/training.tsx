@@ -1,5 +1,5 @@
 import {useQuery, useQueryClient} from "react-query";
-import {api, CategoryCount, ImagesResponse} from "../api/nano-api";
+import {api} from "../api/nano-api";
 import React, {useEffect, useState} from "react";
 
 

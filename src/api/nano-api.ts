@@ -7,38 +7,13 @@ const STREAMING_PATH = `${API_PATH}/stream`
 const CATEGORIES_PATH = `${API_PATH}/categories`
 const CALIBRATION_PATH = `${API_PATH}/calibration`
 const CATEGORY_PATH = (category: string) => `${API_PATH}/categories/${category}`
-const DRIVE_PATH = (cmd: string, speed: number) => `${API_PATH}/drive/${cmd.toLowerCase()}/${speed}`
-
 const TWIST_PATH = `${API_PATH}/twist`
-
+const COLLECT_X_Y_PATH = `${API_PATH}/collect-x-y`
+const TRAINING_PATH = `${API_PATH}/training`
 export const TWIST_ZERO: Twist = {linear: {x: 0, y:0, z:0}, angular: {x:0, y:0, z:0}}
 
-export interface Velocity {
-    x: number
-    y: number
-    z: number
-}
-export interface Twist {
-    linear?: Velocity
-    angular?: Velocity
-}
-export interface ImagesResponse {
-    images: string[]
-}
-export interface CategoryCount {
-    name: string,
-    count?: number
-}
-
-export interface CalibrationCounts {
-    count?: number
-}
-
-export interface StatusResponse {
-    status: boolean
-}
-async function drive(cmd: string, speed: number = 25) {
-    const {data} = await axios.get(DRIVE_PATH(cmd, speed))
+async function getTrainingType() {
+    const {data} = await axios.get(`${TRAINING_PATH}/type`)
     return data
 }
 
@@ -47,7 +22,12 @@ async function twist(twist: Twist) {
     return data
 }
 
-async function collect_image(category: string){
+async function collectXY(payload: XYMap) {
+    const {data} = await axios.post(COLLECT_X_Y_PATH, payload)
+    return data
+}
+
+async function collectImage(category: string){
     const {data} = await axios.get(`${CATEGORY_PATH(category)}/collect`)
     return data
 }
@@ -123,9 +103,10 @@ export const api = {
     methods: {
         twist,
         autodrive,
-        drive,
-        collect_image,
+        collectXY,
+        collectImage,
         getCategories,
+        getTrainingType,
         getCategoryCounts,
         collectCalibrationImages,
         getCalibrationCounts,

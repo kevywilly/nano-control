@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {api, CalibrationCounts, ImagesResponse} from "../api/nano-api";
+import {api} from "../api/nano-api";
 import {useQuery, useQueryClient} from "react-query";
 
 export default function Calibrator() {
