@@ -61,7 +61,7 @@ export default function Dashboard() {
         api.methods.collectXY(payload)
     }
     const handleStop = () => {
-        setTwist(TWIST_ZERO)
+        setTwist({linear: {x:0, y:0, z: 0}, angular: {x: 0, y: 0, z:0}})
     }
     const handleJoy = (e: IJoystickUpdateEvent, turn?: boolean) => {
 
@@ -80,8 +80,25 @@ export default function Dashboard() {
             x = (e.y || 0)
             z = -(e.x || 0)
         } else {
-            x = (e.y || 0)
-            y = (e.x || 0)
+            const d = (e.distance || 0)/100.0
+            switch(e.direction) {
+                case "FORWARD":
+                    x = d
+                    break
+                case "BACKWARD":
+                    x = -d
+                    break
+                case "LEFT":
+                    y = -d
+                    break
+                case "RIGHT":
+                    y = d
+                    break
+
+            }
+
+            //x = (e.y || 0)
+            //y = (e.x || 0)
         }
 
         x = x * drive_sensitivity;
@@ -100,6 +117,7 @@ export default function Dashboard() {
 
     return (
         <div>
+
             <div className={`flex flex-row w-full fixed top-0 -z-10 gap-2`} >
                 <div className="flex flex-col items-center gap-y-6">
                     <div style={{width: "960px", height:"540px"}}>
@@ -116,13 +134,13 @@ export default function Dashboard() {
                     <div >
                         <div className="text-white flex flex-row justify-center gap-x-8 items-center text-xs">
                             <Joystick size={120} sticky={false} baseColor="white" stickColor="green" move={handleJoy}
-                                      stop={handleStop} minDistance={5}/>
+                                      stop={handleStop} />
                             <button className={`button-xs}`} onClick={handleAutodrive}>
                                 {`Auto: ${autodrive ? "ON" : "OFF"}`}
                             </button>
                             <button onClick={handleStop} className="button bg-red-400 text-white">Stop</button>
                             <Joystick size={120} sticky={false} baseColor="white" stickColor="orange"
-                                      move={(e) => handleJoy(e, true)} stop={handleStop} minDistance={5}/>
+                                      move={(e) => handleJoy(e, true)} stop={handleStop} />
                         </div>
                     </div>
                 </div>
@@ -160,6 +178,10 @@ export default function Dashboard() {
 
 
                 </div>
+            </div>
+            <div className="fixed border-t" style={{top: "270px", left: "0px", width: "960px", height: "1px"}}>
+            </div>
+            <div className="fixed border-l" style={{top: "0px", left: "480px", width: "1px", height: "540px"}}>
             </div>
         </div>
 
