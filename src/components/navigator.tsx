@@ -99,7 +99,7 @@ export default function Navigator() {
             {getDivisions().map(d => (
                 <div
                     key={d.angle}
-                    className={`${d.angle === 0 ? 'bg-green-700 text-white' : ''} fixed z-10 opacity-70  h-full flex flex-col justify-center items-center text-white font-bold cursor-crosshair`}
+                    className={`${d.angle === 0 ? 'bg-green-700 text-white' : ''} fixed z-10 opacity-80 border-r  h-full flex flex-col justify-center items-center text-white font-bold cursor-crosshair`}
                     style={{top: 0, left: d.left, width: d.width}}
                     onClick={(e) => handleAngleClick(e)}
                 >
@@ -107,6 +107,11 @@ export default function Navigator() {
 
                 </div>
             ))}
+            <div
+                className="fixed z-50 h-12 bg-red-600 text-white font-bold opacity-50 flex flex-row justify-center items-center"
+                style={{top: Math.round(image_height/2-12), width: image_width}}
+                onClick={handleStop}
+            >STOP</div>
         </div>
     )
 
