@@ -6,10 +6,9 @@ import {BrowserRouter as Router, Route, Routes,} from "react-router-dom";
 import Calibrator from "./components/calibrator";
 import Training from "./components/training";
 import NavBar from "./components/navbar";
+import Navigator from "./components/navigator";
 
 const queryClient = new QueryClient()
-
-
 
 function App() {
   return (
@@ -18,6 +17,7 @@ function App() {
               <Routes>
                   <Route path="/" element={<NavBar/>}>
                       <Route path="/" element={<Dashboard/>}/>
+                      <Route path="/navigator" element={<Navigator/>}/>
                       <Route path="/calibration" element={<Calibrator/>}/>
                       <Route path="/training" element={<Training/>}/>
                   </Route>

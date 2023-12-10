@@ -8,6 +8,7 @@ const CATEGORIES_PATH = `${API_PATH}/categories`
 const CALIBRATION_PATH = `${API_PATH}/calibration`
 const CATEGORY_PATH = (category: string) => `${API_PATH}/categories/${category}`
 const TWIST_PATH = `${API_PATH}/twist`
+const TURN_PATH = `${API_PATH}/turn`
 const COLLECT_X_Y_PATH = `${API_PATH}/collect-x-y`
 const TRAINING_PATH = `${API_PATH}/training`
 export const TWIST_ZERO: Twist = {linear: {x: 0, y:0, z:0}, angular: {x:0, y:0, z:0}}
@@ -17,6 +18,10 @@ async function getTrainingType() {
     return data
 }
 
+async function turn(angle: number, velocity: number) {
+    const {data} = await axios.get(`${TURN_PATH}/${angle}/${velocity}`)
+    return data
+}
 async function twist(twist: Twist) {
     const {data} = await axios.post(TWIST_PATH, twist)
     return data
@@ -102,6 +107,7 @@ export const api = {
     },
     methods: {
         twist,
+        turn,
         autodrive,
         collectXY,
         collectImage,

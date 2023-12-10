@@ -179,6 +179,7 @@ export default function Dashboard() {
 
                 </div>
             </div>
+
             <div className="fixed border-t" style={{top: "270px", left: "0px", width: "960px", height: "1px"}}>
             </div>
             <div className="fixed border-l" style={{top: "0px", left: "480px", width: "1px", height: "540px"}}>
