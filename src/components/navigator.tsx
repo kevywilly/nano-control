@@ -57,7 +57,7 @@ export default function Navigator() {
                 velocity = 0
             }
             if(!debug)
-                api.methods.twist({linear: {x: velocity, y:0, z:0}, angular: {x: 0, y:0, z:0}})
+                api.methods.twist({linear: {x: velocity/2, y:0, z:0}, angular: {x: 0, y:0, z:0}})
         } else {
             if(!debug)
                 if(angle >= 0) {
