@@ -10,6 +10,7 @@ const image_divisions = 24
 const panel_width=Math.round(image_width/2/(image_divisions/2));
 export default function Navigator() {
 
+    const [capture, setCapture] = useState(false)
     const [driveCmd, setDriveCmd] = useState({angle: 0, velocity: 0})
     const getDivisions = () => {
         let ar = []
@@ -30,12 +31,6 @@ export default function Navigator() {
         }
 
         return ar
-    }
-
-    const handleImageClick = (e: any) => {
-        console.log(e.offsetY)
-        console.log(e.offsetY)
-        console.log(e)
     }
 
     const handleAngleClick = (e: any) => {
@@ -68,6 +63,9 @@ export default function Navigator() {
 
         }
         setDriveCmd({angle, velocity})
+        if(capture) {
+
+        }
 
     }
 
@@ -85,11 +83,11 @@ export default function Navigator() {
                     src={`${api.routes.stream_url}`}
                     alt="Jetson Rover Stream 3d"
                     content="multipart/x-mixed-replace; boundary=frame"
-                    onClick={(e) => handleImageClick(e)}
                 />
             </div>
             <div className = "fixed top-0 z-20 w-full text-white font-semibold bg-black flex flex-row p-2 text-xs gap-4 justify-center">
                 <span>cmd: (angle: {driveCmd.angle}, velocity: {driveCmd.velocity})</span>
+                <span><button className={`border px-2 ${capture ? "border-green-500" : "border-gray-50"}`} onClick={() => setCapture(!capture)}>Capture {capture ? "On" : "OFF"}</button></span>
             </div>
             <div className = "fixed bottom-0 z-20 w-full text-white font-semibold bg-black flex flex-row p-2  ">
                 <div className="flex-grow">

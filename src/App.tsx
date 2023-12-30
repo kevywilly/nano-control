@@ -16,7 +16,8 @@ function App() {
           <Router>
               <Routes>
                   <Route path="/" element={<NavBar/>}>
-                      <Route path="/" element={<Dashboard/>}/>
+                      <Route path="/" element={<Navigator/>}/>
+                      <Route path="/dashboard" element={<Dashboard/>}/>
                       <Route path="/navigator" element={<Navigator/>}/>
                       <Route path="/calibration" element={<Calibrator/>}/>
                       <Route path="/training" element={<Training/>}/>

@@ -19,7 +19,8 @@ export const NavBarItem = (props: { name: string, route: string }) => {
 export default function NavBar(){
     return <>
             <div className="navbar">
-                <NavBarItem name="Dashboard" route="/"/>
+                <NavBarItem name="Navigator" route="/"/>
+                <NavBarItem name="Dashboard" route="/dashboard"/>
                 <NavBarItem name="Training" route="/training"/>
                 <div className="flex-grow"></div>
             </div>
