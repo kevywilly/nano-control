@@ -12,3 +12,28 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@-webkit-keyframes shaker {
+  0% { -webkit-transform: translate(2px, 0); }
+  50% { -webkit-transform: translate(-2px, 0); }
+  100% { -webkit-transform: translate(2px, 0); }
+}
+
+.shake {
+  -webkit-animation-name: shaker;
+  -webkit-animation-duration: 0.1s;
+  -webkit-transform-origin:50% 50%;
+  -webkit-animation-timing-function: linear;
+  background-color: #c0392b;
+}
+
+.shake:hover {
+  background-color: #e74c3c;
+}
+
+.shake .default {
+  display: none;
+}
+
+.shake .error {
+  display: block;
+}

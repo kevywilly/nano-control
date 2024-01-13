@@ -13,6 +13,11 @@ const COLLECT_X_Y_PATH = `${API_PATH}/collect-x-y`
 const TRAINING_PATH = `${API_PATH}/training`
 export const TWIST_ZERO: Twist = {linear: {x: 0, y:0, z:0}, angular: {x:0, y:0, z:0}}
 
+async function snapshot() {
+    const {data} = await axios.get(`${API_PATH}/snapshot`)
+    return data
+}
+
 async function getTrainingType() {
     const {data} = await axios.get(`${TRAINING_PATH}/type`)
     return data
@@ -121,7 +126,8 @@ export const api = {
         getCalibrationImages,
         deleteAllCalibrationImages,
         deleteCalibrationImage,
-        calibrate
+        calibrate,
+        snapshot
     }
 }
 

@@ -3,7 +3,7 @@ import {api, TWIST_ZERO} from "../api/nano-api";
 import {useQuery, useQueryClient} from "react-query";
 import {Joystick} from 'react-joystick-component';
 import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
-
+import {CameraIcon} from "@heroicons/react/20/solid";
 
 const drive_sensitivity = .6;
 const turn_sensitivity = .2;
@@ -48,6 +48,25 @@ export default function Dashboard() {
     const handleAutodrive = () => {
         setAutodrive(false)
         api.methods.autodrive().then((e) => setAutodrive(e.status))
+    }
+
+    const moveCamera = (margin: string) => {
+        let x = document.getElementById("camera");
+        x!.style.marginLeft = margin;
+        x!.style.transition = ".2s"
+    }
+    const takeSnapshot = () => {
+        setTimeout(() => {
+            moveCamera("5px");
+            setTimeout(() => {
+                moveCamera("-5px")
+                setTimeout(() => {
+                    moveCamera("0px");
+                },50)
+            }, 50)
+        }, 50);
+
+        api.methods.snapshot()
     }
 
     const handleImageClick = (e: any) => {
@@ -173,10 +192,6 @@ export default function Dashboard() {
                             }
                         </div>
                     }
-
-
-
-
                 </div>
             </div>
 
@@ -184,6 +199,11 @@ export default function Dashboard() {
             </div>
             <div className="fixed border-l" style={{top: "0px", left: "480px", width: "1px", height: "540px"}}>
             </div>
+
+            <div id="camera" className="fixed" style={{top: "244px", left: "456px", width: "40px", height: "40px"}}>
+                <CameraIcon className="w-12 h-12 text-white opacity-40 hover:opacity-80" onClick={takeSnapshot} />
+            </div>
+
         </div>
 
     )
