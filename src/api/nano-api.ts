@@ -92,6 +92,10 @@ async function calibrate() {
     await axios.get(`${CALIBRATION_PATH}/calibrate`)
 }
 
+async function navigate(request: NavRequest) {
+    const {data} = await axios.post(`${API_PATH}/navigate`,request)
+    return data
+}
 /*
 
 
@@ -127,7 +131,8 @@ export const api = {
         deleteAllCalibrationImages,
         deleteCalibrationImage,
         calibrate,
-        snapshot
+        snapshot,
+        navigate
     }
 }
 

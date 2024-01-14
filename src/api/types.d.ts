@@ -3,6 +3,21 @@ interface TrainingType {
     type: ("OBSTACLE" | "PATH")
 }
 
+
+
+interface NavCommand {
+    x: number
+    y: number
+    w: number
+    h: number
+}
+
+interface NavRequest {
+    captureMode: boolean
+    driveMode: boolean
+    cmd: NavCommand
+}
+
 interface XYMap {
     x: number
     y: number

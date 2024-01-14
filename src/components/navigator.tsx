@@ -56,9 +56,9 @@ export default function Navigator() {
         } else {
             if(!debug)
                 if(angle >= 0) {
-                    api.methods.turn(Math.abs(angle), 2*velocity)
+                    api.methods.turn(Math.abs(angle), Math.abs(angle)/30.0/2)
                 } else {
-                    api.methods.turn(Math.abs(angle), -2*velocity)
+                    api.methods.turn(Math.abs(angle), -Math.abs(angle)/30.0/2)
                 }
 
         }
