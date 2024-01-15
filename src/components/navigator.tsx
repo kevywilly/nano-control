@@ -1,115 +1,77 @@
-import {api} from "../api/nano-api";
-import React, {useState} from "react";
+import {api, TWIST_ZERO} from "../api/nano-api";
+import React, {useRef, useState} from "react";
 
-const image_width = 1280;
-const image_height = 720;
-const half_width = image_width/2
-const debug = false
-const camera_resolution = 60
-const image_divisions = 24
-const panel_width=Math.round(image_width/2/(image_divisions/2));
+const NAVZERO: NavCommand = {x:0, y:0, w:0, h:0}
+
+const ToggleButton = (props: {label: string, status: boolean, onClick: () => void}) => {
+    const {label, status, onClick} = props
+    const style = status ? "opacity-100" : "opacity-40"
+    return (
+        <button className={`w-1/5 mx-2 py-1 rounded-md bg-blue-900 text-blue-50 font-bold ${style}`} onClick={onClick}>
+            {label} {status ? "Active" : "Désactivé"}
+        </button>
+    )
+}
+const StopButton = (props: {cls?: string, onClick: () => void}) => {
+    const {cls, onClick} = props
+    return (
+        <button className={`bg-blue-900 text-blue-50 font-semibold py-1 px-4 w-full opacity-90 ${cls}`}  onClick={onClick}>
+            ARRÊT!
+        </button>
+    )
+}
 export default function Navigator() {
 
-    const [capture, setCapture] = useState(false)
-    const [driveCmd, setDriveCmd] = useState({angle: 0, velocity: 0})
-    const getDivisions = () => {
-        let ar = []
-        let left = 0
-        let angle = -(camera_resolution/2)
-
-        for (let i = 0; i <= image_divisions; i++) {
-            let margin = angle > 0 ? "items-end" : (angle < 0 ? "items-start" : "items-center")
-
-            ar.push({
-                left: left - panel_width/2,
-                width: panel_width,
-                angle: -angle,
-                margin: margin
-            })
-            left = left + panel_width
-            angle = angle + camera_resolution/image_divisions
-        }
-
-        return ar
-    }
+    const [captureMode, setCaptureMode] = useState(false)
+    const [driveMode, setDriveMode] = useState(false)
+    const [navCommand, setNavCommand] = useState<NavCommand>(NAVZERO)
+    const imgRef = useRef(null)
 
     const handleAngleClick = (e: any) => {
-        let velocity = 0
-        let angle = Math.round((60/2)*(half_width-e.clientX)/half_width)
 
-        if(angle >=-1.25 && angle <=1.25) {
-            angle = 0
+        console.log(e.target.offsetLeft)
+        console.log(e.target.width)
+        let cmd: NavCommand = NAVZERO;
+        if(imgRef.current) {
+            const w = imgRef.current["width"];
+            const h = imgRef.current["height"];
+            const x = e.clientX-imgRef.current["offsetLeft"];
+            const y = e.clientY-imgRef.current["offsetTop"];
+            cmd = {x,y,w,h};
+            setNavCommand(cmd)
         }
 
-        if(angle === 0) {
-            velocity  = -(e.clientY - image_height / 2) / (image_height / 2)
-        } else {
-            velocity = (image_height-e.clientY)/image_height
-        }
-
-        if(angle === 0) {
-            if(driveCmd.angle===0 && driveCmd.velocity!==0) {
-                velocity = 0
-            }
-            if(!debug)
-                api.methods.twist({linear: {x: velocity/2, y:0, z:0}, angular: {x: 0, y:0, z:0}})
-        } else {
-            if(!debug)
-                if(angle >= 0) {
-                    api.methods.turn(Math.abs(angle), Math.abs(angle)/30.0/2)
-                } else {
-                    api.methods.turn(Math.abs(angle), -Math.abs(angle)/30.0/2)
-                }
-
-        }
-        setDriveCmd({angle, velocity})
-        if(capture) {
-
+        if(driveMode || captureMode) {
+            const req: NavRequest = {cmd, captureMode, driveMode}
+            api.methods.navigate(req)
         }
 
     }
 
     const handleStop = () => {
-        setDriveCmd({angle: 0, velocity: 0})
-        api.methods.twist({linear: {x: 0, y:0, z:0}, angular: {x: 0, y:0, z:0}})
-
+        api.methods.twist(TWIST_ZERO)
     }
 
     return(
-        <div>
-            <div className="fixed z-0 top-0">
-                <img
-                    className="aspect-video object-scale-down"
-                    src={`${api.routes.stream_url}`}
-                    alt="Jetson Rover Stream 3d"
-                    content="multipart/x-mixed-replace; boundary=frame"
-                />
+        <div className="w-full flex flex-row justify-center h-screen bg-blue-800">
+        <div className="flex flex-col justify-start items-center" style={{width: "768px"}}>
+            <span className="text-xl font-semibold p-4 text-blue-50">~ Bonjour Felix ~</span>
+            <StopButton cls="rounded-t-lg" onClick={handleStop}/>
+            <img
+                ref={imgRef}
+                className="aspect-video object-scale-down w-full"
+                src={`${api.routes.stream_url}`}
+                alt="Jetson Rover Stream 3d"
+                content="multipart/x-mixed-replace; boundary=frame"
+                onClick={(e) => handleAngleClick(e)}
+            />
+            <StopButton cls="rounded-b-lg" onClick={handleStop}/>
+            <div className = "w-full text-white font-semibold bg-blue-800 flex flex-row p-2 text-xs gap-4 justify-between items-center rounded-b-lg">
+                <ToggleButton label="Capturer" status={captureMode} onClick={() => setCaptureMode(!captureMode)}/>
+                <span>( x: {navCommand.x}, y: {navCommand.y}, w: {navCommand.w}, h: {navCommand.h} )</span>
+                <ToggleButton label="Conduire" status={driveMode} onClick={() => setDriveMode(!driveMode)}/>
             </div>
-            <div className = "fixed top-0 z-20 w-full text-white font-semibold bg-black flex flex-row p-2 text-xs gap-4 justify-center">
-                <span>cmd: (angle: {driveCmd.angle}, velocity: {driveCmd.velocity})</span>
-                <span><button className={`border px-2 ${capture ? "border-green-500" : "border-gray-50"}`} onClick={() => setCapture(!capture)}>Capture {capture ? "On" : "OFF"}</button></span>
-            </div>
-            <div className = "fixed bottom-0 z-20 w-full text-white font-semibold bg-black flex flex-row p-2  ">
-                <div className="flex-grow">
-                <button className="bg-red-600 text-white font-bold py-1 px-4 rounded-md w-full" onClick={handleStop}>STOP</button>
-                </div>
-            </div>
-            {getDivisions().map(d => (
-                <div
-                    key={d.angle}
-                    className={`${d.angle === 0 ? 'bg-green-700 text-white' : ''} fixed z-10 opacity-80 border-r  h-full flex flex-col justify-center items-center text-white font-bold cursor-crosshair`}
-                    style={{top: 0, left: d.left, width: d.width}}
-                    onClick={(e) => handleAngleClick(e)}
-                >
-                    {d.angle}
-
-                </div>
-            ))}
-            <div
-                className="fixed z-50 h-12 bg-red-600 text-white font-bold opacity-50 flex flex-row justify-center items-center"
-                style={{top: Math.round(image_height/2-12), width: image_width}}
-                onClick={handleStop}
-            >STOP</div>
+        </div>
         </div>
     )
 

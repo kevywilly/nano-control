@@ -7,7 +7,6 @@ import Calibrator from "./components/calibrator";
 import Training from "./components/training";
 import NavBar from "./components/navbar";
 import Navigator from "./components/navigator";
-import Navigator2 from "./components/navigator2";
 
 const queryClient = new QueryClient()
 
@@ -17,10 +16,9 @@ function App() {
           <Router>
               <Routes>
                   <Route path="/" element={<NavBar/>}>
-                      <Route path="/" element={<Navigator2/>}/>
+                      <Route path="/" element={<Navigator/>}/>
                       <Route path="/dashboard" element={<Dashboard/>}/>
-                      <Route path="/navigator" element={<Navigator/>}/>
-                      <Route path="/navigator2" element={<Navigator2/>}/>
+                      <Route path="/navigator2" element={<Navigator/>}/>
                       <Route path="/calibration" element={<Calibrator/>}/>
                       <Route path="/training" element={<Training/>}/>
                   </Route>
