@@ -53,13 +53,13 @@ export default function Navigator() {
     }
 
     return(
-        <div className="w-full flex flex-row justify-center h-screen bg-blue-800">
-        <div className="flex flex-col justify-start items-center" style={{width: "768px"}}>
-            <span className="text-xl font-semibold p-4 text-blue-50">~ Bonjour Felix ~</span>
+        <div className="w-full flex flex-row justify-center items-start h-screen bg-blue-800">
+        <div className="flex flex-col justify-start items-center w-4/5 md:w-1/2">
+            <span className="text-base font-semibold p-2 text-blue-50">~ Bonjour Felix ~</span>
             <StopButton cls="rounded-t-lg" onClick={handleStop}/>
             <img
                 ref={imgRef}
-                className="aspect-video object-scale-down w-full"
+                className="w-full"
                 src={`${api.routes.stream_url}`}
                 alt="Jetson Rover Stream 3d"
                 content="multipart/x-mixed-replace; boundary=frame"
