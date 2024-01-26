@@ -1,4 +1,5 @@
 import axios from "axios";
+import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
 export const API_PATH = process.env.REACT_APP_API_PATH
     //is_prod() ? process.env.REACT_APP_API_PROD : process.env.REACT_APP_API_DEV
 
@@ -96,6 +97,11 @@ async function navigate(request: NavRequest) {
     const {data} = await axios.post(`${API_PATH}/navigate`,request)
     return data
 }
+
+async function joystick(request: IJoystickUpdateEvent) {
+    const {data} = await axios.post(`${API_PATH}/joystick`,request)
+    return data
+}
 /*
 
 
@@ -115,6 +121,7 @@ export const api = {
         calibration_image_url: (camera: string, name: string) => `${CALIBRATION_PATH}/${camera}/images/${name}`
     },
     methods: {
+        joystick,
         twist,
         turn,
         autodrive,
