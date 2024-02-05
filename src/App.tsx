@@ -17,7 +17,7 @@ function App() {
           <Router>
               <Routes>
                   <Route path="/" element={<NavBar/>}>
-                      <Route path="/" element={<Driver/>}/>
+                      <Route path="/" element={<Navigator/>}/>
                       <Route path="/driver" element={<Driver/>}/>
                       <Route path="/dashboard" element={<Dashboard/>}/>
                       <Route path="/navigator" element={<Navigator/>}/>
