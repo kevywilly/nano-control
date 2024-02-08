@@ -22,6 +22,11 @@ const StopButton = (props: {cls?: string, onClick: () => void}) => {
         </button>
     )
 }
+
+interface TagsResponse {
+    blocked?: number;
+    free?: number;
+}
 export default function Navigator() {
 
     const [captureMode, setCaptureMode] = useState(false)
@@ -31,14 +36,27 @@ export default function Navigator() {
     const [joy, setJoy] = useState<IJoystickUpdateEvent>()
     const [captured, setCaptured] = useState<string>()
     const [lastTwist, setLastTwist] = useState(TWIST_ZERO)
+    const [tags, setTags] = useState<TagsResponse>({blocked: 0, free: 0})
+    const [autoDrive, setAutoDrive] = useState({status: false})
 
     useEffect(() => {
         if(joy)
             api.methods.joystick(joy).then(setLastTwist)
     }, [joy])
 
+    useEffect(() => {
+        api.methods.get_tags().then(setTags)
+        api.methods.getAutodrive().then(setAutoDrive)
+    },[])
+
+
     const handleJoy = (e:IJoystickUpdateEvent) => {
+        console.log(e)
         setJoy(e)
+    }
+
+    const handleTags = (tag: string) => {
+        api.methods.add_tag(tag).then(setTags)
     }
 
     const handleAngleClick = (e: any) => {
@@ -57,7 +75,7 @@ export default function Navigator() {
             const req: NavRequest = {cmd, captureMode, driveMode}
             api.methods.navigate(req).then(r => {
                 if(r.captured) {
-                    setCaptured(r.captured)
+                    setCaptured(r.captured);
                 }
             })
         }
@@ -65,7 +83,11 @@ export default function Navigator() {
     }
 
     const handleStop = () => {
-        api.methods.twist(TWIST_ZERO)
+        api.methods.twist(TWIST_ZERO);
+    }
+
+    const handleAutoDrive = () => {
+        api.methods.toggleAutodrive().then(setAutoDrive);
     }
 
     return(
@@ -85,20 +107,27 @@ export default function Navigator() {
                 <StopButton cls="rounded-b-lg" onClick={handleStop}/>
                 <div className = "w-full text-white font-semibold bg-blue-800 flex flex-row p-2 text-xs gap-4 justify-between items-center rounded-b-lg">
                     <ToggleButton label="Capture" status={captureMode} onClick={() => setCaptureMode(!captureMode)}/>
-                    <span>( x: {navCommand.x}, y: {navCommand.y}, w: {navCommand.w}, h: {navCommand.h} )</span>
+                    <ToggleButton label="Autodrive" status={autoDrive.status} onClick={handleAutoDrive}/>
                     <ToggleButton label="Auto Nav" status={driveMode} onClick={() => setDriveMode(!driveMode)}/>
                 </div>
-                <Joystick
-                    size={100}
-                    sticky={false}
-                    baseColor="#333"
-                    stickColor="blue"
-                    throttle={200}
-                    move={handleJoy}
-                    stop={handleJoy}
-                />
-                <div className="mt-4 text-xs text-white">
-                    Joy: {lastTwist.linear?.x.toFixed(3)}, {lastTwist.linear?.y.toFixed(3)}, {lastTwist.angular?.z.toFixed(3)}
+                <div className="flex flex-row justify-between items-center w-full">
+                    <button className="h-full p-4 bg-red-600 text-white w-1/4 font-xs" onClick={()=>handleTags('blocked')}>Blocked ({tags?.blocked})</button>
+                    <Joystick
+                        size={100}
+                        sticky={false}
+                        baseColor="#333"
+                        stickColor="blue"
+                        throttle={200}
+                        move={handleJoy}
+                        stop={handleStop}
+                    />
+                    <button className="h-full p-4 bg-green-700 text-white w-1/4 font-xs" onClick={() => handleTags('free')}>Free ({tags?.free})</button>
+                </div>
+                <div className="flex flex-row items-center justify-between w-full">
+                    <div className="mt-4 text-xs text-white">Nav: ( x: {navCommand.x}, y: {navCommand.y}, w: {navCommand.w}, h: {navCommand.h} )</div>
+                    <div className="mt-4 text-xs text-white">
+                        Joy: {lastTwist.linear?.x.toFixed(3)}, {lastTwist.linear?.y.toFixed(3)}, {lastTwist.angular?.z.toFixed(3)}
+                    </div>
                 </div>
                 <div className="mt-4 text-xs text-white">Cap: {captured}</div>
 

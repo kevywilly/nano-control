@@ -47,7 +47,7 @@ export default function Dashboard() {
 
     const handleAutodrive = () => {
         setAutodrive(false)
-        api.methods.autodrive().then((e) => setAutodrive(e.status))
+        api.methods.toggleAutodrive().then((e) => setAutodrive(e.status))
     }
 
     const moveCamera = (margin: string) => {

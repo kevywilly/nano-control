@@ -9,7 +9,6 @@ const CATEGORIES_PATH = `${API_PATH}/categories`
 const CALIBRATION_PATH = `${API_PATH}/calibration`
 const CATEGORY_PATH = (category: string) => `${API_PATH}/categories/${category}`
 const TWIST_PATH = `${API_PATH}/twist`
-const TURN_PATH = `${API_PATH}/turn`
 const COLLECT_X_Y_PATH = `${API_PATH}/collect-x-y`
 const TRAINING_PATH = `${API_PATH}/training`
 export const TWIST_ZERO: Twist = {linear: {x: 0, y:0, z:0}, angular: {x:0, y:0, z:0}}
@@ -24,10 +23,7 @@ async function getTrainingType() {
     return data
 }
 
-async function turn(angle: number, velocity: number) {
-    const {data} = await axios.get(`${TURN_PATH}/${angle}/${velocity}`)
-    return data
-}
+
 async function twist(twist: Twist) {
     const {data} = await axios.post(TWIST_PATH, twist)
     return data
@@ -43,13 +39,13 @@ async function collectImage(category: string){
     return data
 }
 
-async function autodrive(): Promise<StatusResponse>{
-    const {data} = await axios.get(AUTODRIVE_PATH)
+async function toggleAutodrive(): Promise<StatusResponse>{
+    const {data} = await axios.post(AUTODRIVE_PATH, {})
     return data
 }
 
-async function getCategories(): Promise<string[]>{
-    const {data} = await axios.get(CATEGORIES_PATH)
+async function getAutodrive(): Promise<StatusResponse>{
+    const {data} = await axios.get(AUTODRIVE_PATH)
     return data
 }
 
@@ -102,6 +98,17 @@ async function joystick(request: IJoystickUpdateEvent) {
     const {data} = await axios.post(`${API_PATH}/joystick`,request)
     return data
 }
+
+async function add_tag(tag: string) {
+    const {data} = await axios.post(`${API_PATH}/tags`,{tag})
+    return data
+}
+
+async function get_tags() {
+    const {data} = await axios.get(`${API_PATH}/tags`)
+    return data
+}
+
 /*
 
 
@@ -123,11 +130,12 @@ export const api = {
     methods: {
         joystick,
         twist,
-        turn,
-        autodrive,
+        add_tag,
+        get_tags,
+        toggleAutodrive,
+        getAutodrive,
         collectXY,
         collectImage,
-        getCategories,
         getTrainingType,
         getCategoryCounts,
         collectCalibrationImages,
