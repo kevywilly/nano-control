@@ -51,8 +51,11 @@ export default function Navigator() {
 
 
     const handleJoy = (e:IJoystickUpdateEvent) => {
-        console.log(e)
-        setJoy(e)
+        if(e.type === 'stop') {
+            handleStop()
+        } else {
+            setJoy(undefined)
+        }
     }
 
     const handleTags = (tag: string) => {
