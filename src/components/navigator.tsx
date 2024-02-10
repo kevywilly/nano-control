@@ -52,9 +52,10 @@ export default function Navigator() {
 
     const handleJoy = (e:IJoystickUpdateEvent) => {
         if(e.type === 'stop') {
-            handleStop()
-        } else {
             setJoy(undefined)
+            handleStop();
+        } else {
+            setJoy(e);
         }
     }
 
