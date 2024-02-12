@@ -6,7 +6,7 @@ import {api} from "../api/nano-api";
 
 export default function Driver() {
 
-    const [joy, setJoy] = useState<IJoystickUpdateEvent>()
+    const [joy, setJoy] = useState<JoystickRequest>()
 
     useEffect(() => {
         if(joy)
@@ -14,7 +14,7 @@ export default function Driver() {
     }, [joy])
 
     const handleJoy = (e:IJoystickUpdateEvent) => {
-        setJoy(e)
+        setJoy({event: e})
     }
 
     return <div className="flex flex-col items-center justify-around mt-4 gap-4 w-full h-full">

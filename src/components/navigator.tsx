@@ -33,11 +33,12 @@ export default function Navigator() {
     const [driveMode, setDriveMode] = useState(false)
     const [navCommand, setNavCommand] = useState<NavCommand>(NAVZERO)
     const imgRef = useRef(null)
-    const [joy, setJoy] = useState<IJoystickUpdateEvent>()
+    const [joy, setJoy] = useState<JoystickRequest>()
     const [captured, setCaptured] = useState<string>()
     const [lastTwist, setLastTwist] = useState(TWIST_ZERO)
     const [tags, setTags] = useState<TagsResponse>({blocked: 0, free: 0})
     const [autoDrive, setAutoDrive] = useState({status: false})
+    const [strafe, setStrafe] = useState(false)
 
     useEffect(() => {
         if(joy)
@@ -55,7 +56,7 @@ export default function Navigator() {
             setJoy(undefined)
             handleStop();
         } else {
-            setJoy(e);
+            setJoy({event: e, strafe});
         }
     }
 
@@ -111,6 +112,7 @@ export default function Navigator() {
                 <StopButton cls="rounded-b-lg" onClick={handleStop}/>
                 <div className = "w-full text-white font-semibold bg-blue-800 flex flex-row p-2 text-xs gap-4 justify-between items-center rounded-b-lg">
                     <ToggleButton label="Capture" status={captureMode} onClick={() => setCaptureMode(!captureMode)}/>
+                    <ToggleButton label="Strafe" status={strafe} onClick={() => setStrafe(!strafe)}/>
                     <ToggleButton label="Autodrive" status={autoDrive.status} onClick={handleAutoDrive}/>
                     <ToggleButton label="Auto Nav" status={driveMode} onClick={() => setDriveMode(!driveMode)}/>
                 </div>

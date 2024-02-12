@@ -94,7 +94,7 @@ async function navigate(request: NavRequest) {
     return data
 }
 
-async function joystick(request: IJoystickUpdateEvent) {
+async function joystick(request: JoystickRequest) {
     const {data} = await axios.post(`${API_PATH}/joystick`,request)
     return data
 }

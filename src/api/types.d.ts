@@ -3,7 +3,13 @@ interface TrainingType {
     type: ("OBSTACLE" | "PATH")
 }
 
-
+interface JoystickRequest {
+    event: {
+        x: number | null;
+        y: number | null;
+    }
+    strafe?: bool;
+}
 
 interface NavCommand {
     x: number
