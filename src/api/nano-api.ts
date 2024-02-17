@@ -1,5 +1,5 @@
 import axios from "axios";
-import {IJoystickUpdateEvent} from "react-joystick-component/build/lib/Joystick";
+
 export const API_PATH = process.env.REACT_APP_API_PATH
     //is_prod() ? process.env.REACT_APP_API_PROD : process.env.REACT_APP_API_DEV
 
@@ -13,16 +13,11 @@ const COLLECT_X_Y_PATH = `${API_PATH}/collect-x-y`
 const TRAINING_PATH = `${API_PATH}/training`
 export const TWIST_ZERO: Twist = {linear: {x: 0, y:0, z:0}, angular: {x:0, y:0, z:0}}
 
-async function snapshot() {
-    const {data} = await axios.get(`${API_PATH}/snapshot`)
-    return data
-}
 
 async function getTrainingType() {
     const {data} = await axios.get(`${TRAINING_PATH}/type`)
     return data
 }
-
 
 async function twist(twist: Twist) {
     const {data} = await axios.post(TWIST_PATH, twist)
@@ -99,6 +94,16 @@ async function joystick(request: JoystickRequest) {
     return data
 }
 
+async function createSnapshot(folder: string, label: string) {
+    const {data} = await axios.post(`${API_PATH}/snapshots/${folder}/${label}`)
+    return data
+}
+
+async function getSnapshots(folder: string) {
+    const {data} = await axios.get(`${API_PATH}/snapshots/${folder}`)
+    return data
+}
+
 async function add_tag(tag: string) {
     const {data} = await axios.post(`${API_PATH}/tags`,{tag})
     return data
@@ -121,6 +126,7 @@ def delete_calibration_image(name):
 
 @app.get('/api/calibration/calibrate')
  */
+
 export const api = {
     routes: {
         stream_url: STREAMING_PATH,
@@ -128,6 +134,8 @@ export const api = {
         calibration_image_url: (camera: string, name: string) => `${CALIBRATION_PATH}/${camera}/images/${name}`
     },
     methods: {
+        createSnapshot,
+        getSnapshots,
         joystick,
         twist,
         add_tag,
@@ -146,7 +154,6 @@ export const api = {
         deleteAllCalibrationImages,
         deleteCalibrationImage,
         calibrate,
-        snapshot,
         navigate
     }
 }

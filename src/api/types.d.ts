@@ -3,6 +3,17 @@ interface TrainingType {
     type: ("OBSTACLE" | "PATH")
 }
 
+interface TernarySnapshotsResponse {
+    forward?: number;
+    left?: number;
+    right?: number;
+}
+
+interface SnapshotRequest {
+    folder: string
+    label: string
+}
+
 interface JoystickRequest {
     event: {
         x: number | null;
